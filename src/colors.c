@@ -30,6 +30,8 @@ const Clr clr_violet         = {128,   0, 255, SDL_ALPHA_OPAQUE};
 
 const Clr clr_orange         = {255, 128,   0, SDL_ALPHA_OPAQUE};
 
+/*
 const Clr clr_msg_good       = clr_green_lgt;
 const Clr clr_msg_bad        = clr_red_lgt;
 const Clr clr_msg_crit       = clr_orange;
+*/

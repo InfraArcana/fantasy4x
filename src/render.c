@@ -51,6 +51,7 @@ static void load_font_data_() {
   TRACE_FUNC_BEGIN;
 
   font_surface_tmp  = IMG_Load(font_img_path);
+  assert(font_surface_tmp && "Failed to load font image");
   clr_bg            = SDL_MapRGB(font_surface_tmp->format, 0, 0, 0);
 
   for(y = 0; y < font_surface_tmp->h; ++y) {
@@ -65,6 +66,8 @@ static void load_font_data_() {
 }
 
 static void get_glyph_sheet_pos_(const char GLYPH, P* const p_ptr) {
+  p_set_xy(p_ptr, -1, -1);
+
   switch(GLYPH) {
     default:  {} break;
     case ' ': p_set_xy(p_ptr, 0, 0);    break;
@@ -172,9 +175,7 @@ static void get_glyph_sheet_pos_(const char GLYPH, P* const p_ptr) {
     case   9: p_set_xy(p_ptr, 7, 6);    break;
     case  10: p_set_xy(p_ptr, 8, 6);    break;
   }
-  TRACE("Illegal glyph");
-  assert(false);
-  p_set_xy(p_ptr, 0, 0);
+  assert(p_ptr->x >= 0 && "Illegal glyph");
 }
 
 static void put_pxs_for_glyph_(const char GLYPH, const P* const px_p,
@@ -183,23 +184,25 @@ static void put_pxs_for_glyph_(const char GLYPH, const P* const px_p,
 
   get_glyph_sheet_pos_(GLYPH, &sheet_p);
 
-  sheet_px_p0 = sheet_p;
-  p_multipl_xy(&sheet_px_p0, CELL_PX_W, CELL_PX_H);
+  if(sheet_p.x >= 0) {
+    sheet_px_p0 = sheet_p;
+    p_multipl_xy(&sheet_px_p0, CELL_PX_W, CELL_PX_H);
 
-  sheet_px_p1 = sheet_px_p0;
-  p_offset_xy(&sheet_px_p1, CELL_PX_W - 1, CELL_PX_H - 1);
+    sheet_px_p1 = sheet_px_p0;
+    p_offset_xy(&sheet_px_p1, CELL_PX_W - 1, CELL_PX_H - 1);
 
-  scr_px_p = *px_p;
+    scr_px_p = *px_p;
 
-  set_render_clr_(clr);
+    set_render_clr_(clr);
 
-  for(sheet_px_p.y = sheet_px_p0.y; sheet_px_p.y <= sheet_px_p1.y; ++sheet_px_p.y) {
-    scr_px_p.x = px_p->x;
-    for(sheet_px_p.x = sheet_px_p0.x; sheet_px_p.x <= sheet_px_p1.x; ++sheet_px_p.x) {
-      if(font_px_data_[sheet_px_p.x][sheet_px_p.x]) {put_px_(&scr_px_p);}
-      ++scr_px_p.x;
+    for(sheet_px_p.y = sheet_px_p0.y; sheet_px_p.y <= sheet_px_p1.y; ++sheet_px_p.y) {
+      scr_px_p.x = px_p->x;
+      for(sheet_px_p.x = sheet_px_p0.x; sheet_px_p.x <= sheet_px_p1.x; ++sheet_px_p.x) {
+        if(font_px_data_[sheet_px_p.x][sheet_px_p.y]) {put_px_(&scr_px_p);}
+        ++scr_px_p.x;
+      }
+      ++scr_px_p.y;
     }
-    ++scr_px_p.y;
   }
 }
 
@@ -213,6 +216,7 @@ static void draw_glyph_at_px(const char GLYPH, const P* px_p, const Clr* clr,
   put_pxs_for_glyph_(GLYPH, px_p, clr);
 }
 
+/*
 static void draw_glyph_in_map_(const char GLYPH, const P* p, const Clr* clr,
                                const Clr* bg_clr) {
   if(is_inited_()) {
@@ -225,11 +229,13 @@ static void draw_glyph_in_map_(const char GLYPH, const P* p, const Clr* clr,
     }
   }
 }
+*/
 
 void render_init() {
   const char title[] = "Fantasy 4x " GAME_VERSION_LABEL;
 
   TRACE_FUNC_BEGIN;
+
   render_cleanup();
 
   TRACE("Setting up rendering window");
@@ -264,6 +270,45 @@ void render_cleanup() {
   TRACE_FUNC_END;
 }
 
-void draw_text(const char text[], const P* p, const Clr* clr, const Clr* bg_clr) {
-  /* TODO */
+void clear_scr() {
+  if(is_inited_()) {
+    set_render_clr_(&clr_black);
+    SDL_RenderClear(sdl_renderer_);
+  }
+}
+
+void render_present() {
+  if(is_inited_()) {
+    SDL_RenderPresent(sdl_renderer_);
+  }
+}
+
+void draw_text(const char* text, const P* p, const Clr* clr, const Clr* bg_clr) {
+  if(is_inited_()) {
+    if(p->y >= 0 && p->y < SCR_H) {
+      const char* str_ptr = text;
+      P           px_p;
+
+      px_p = *p;
+      p_multipl_xy(&px_p, CELL_PX_W, CELL_PX_H);
+
+      /*drawRect(pxPos, P(LEN * CELL_PX_W, CELL_PX_H), bgClr, RectType::filled);*/
+
+      while(*str_ptr != '\0') {
+        if(px_p.x < 0 || px_p.x >= SCR_PX_W) {
+          return;
+        }
+        draw_glyph_at_px(*str_ptr, &px_p, clr, false, &clr_black);
+        p_offset_xy(&px_p, CELL_PX_W, 0);
+        ++str_ptr;
+      }
+    }
+  }
+}
+
+void draw_text_xy(const char* text, const int X, const int Y, const Clr* clr,
+                  const Clr* bg_clr) {
+  P p;
+  p_set_xy(&p, X, Y);
+  draw_text(text, &p, clr, bg_clr);
 }

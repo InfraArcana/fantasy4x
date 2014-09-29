@@ -17,6 +17,8 @@
 #define TRACE_LVL 1
 /*--------------------------------------------------------------------*/
 
+typedef enum {false, true} bool;
+
 #ifdef NDEBUG
 
 #define TRACE(args)
@@ -37,9 +39,7 @@
          __FILE__, __LINE__, __func__, msg)
 
 /* Print trace message if verbose mode is enabled */
-#define TRACE_VERBOSE(msg) if (TRACE_LVL > 1) \
-  printf("\n%s, line %d, %s():\n%s\n", \
-         __FILE__, __LINE__, __func__, msg)
+#define TRACE_VERBOSE(msg) if (TRACE_LVL > 1) TRACE(msg)
 
 /* Print trace message for function start */
 #define TRACE_FUNC_BEGIN if (TRACE_LVL > 0) \
@@ -47,9 +47,7 @@
          __FILE__, __LINE__, __func__)
 
 /* Print trace message for function start if verbose mode is enabled */
-#define TRACE_FUNC_BEGIN_VERBOSE if (TRACE_LVL > 1) \
-  printf("\n %s, line %d, %s()...\n", \
-         __FILE__, __LINE__, __func__)
+#define TRACE_FUNC_BEGIN_VERBOSE if (TRACE_LVL > 1) TRACE_FUNC_BEGIN
 
 /* Print trace message for function end */
 #define TRACE_FUNC_END if (TRACE_LVL > 0) \
@@ -57,12 +55,8 @@
          __FILE__, __LINE__, __func__)
 
 /* Print trace message for function end if verbose mode is enabled */
-#define TRACE_FUNC_END_VERBOSE if (TRACE_LVL > 1) \
-  printf("\n%s, line %d, %s() [DONE]\n", \
-         __FILE__, __LINE__, __func__)
+#define TRACE_FUNC_END_VERBOSE if (TRACE_LVL > 1) TRACE_FUNC_END
 
 #endif /* NDEBUG */
-
-typedef enum {false, true} bool;
 
 #endif

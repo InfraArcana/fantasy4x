@@ -1,7 +1,20 @@
-#ifndef CMN_TYPES_H
-#define CMN_TYPES_H
+#ifndef CMN_UTILS_H
+#define CMN_UTILS_H
 
+#include "cmn_data.h"
 #include "colors.h"
+
+#define NR_ELEMS(a) (sizeof(a) / sizeof(a[0]))
+
+/*--------------------------------------------------------- STRING HANDLING */
+typedef char str_buffer_t[STR_BUFFER_SIZE];
+
+/* Note: buffer must have size "STR_BUFFER_SIZE" */
+void to_str(const long int V, str_buffer_t* str_buffer_ptr);
+
+void str_append(str_buffer_t* str_buffer_ptr, const char* app_str);
+
+void str_set(str_buffer_t* str_buffer_ptr, const char* str);
 
 /*--------------------------------------------------------- POSITION */
 typedef struct {int x, y;} P;

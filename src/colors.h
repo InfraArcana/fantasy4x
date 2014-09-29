@@ -35,8 +35,10 @@ extern const Clr clr_violet;
 
 extern const Clr clr_orange;
 
+/*
 extern const Clr clr_msg_good;
 extern const Clr clr_msg_bad;
 extern const Clr clr_msg_crit;
+*/
 
 #endif

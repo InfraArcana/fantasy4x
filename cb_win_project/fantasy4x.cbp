@@ -75,13 +75,16 @@
 		</Unit>
 		<Unit filename="../src/api.h" />
 		<Unit filename="../src/base.h" />
-		<Unit filename="../src/cmn_data.h" />
-		<Unit filename="../src/cmn_types.c">
+		<Unit filename="../src/cmn_data.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="../src/cmn_types.h" />
+		<Unit filename="../src/cmn_data.h" />
+		<Unit filename="../src/cmn_utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/cmn_utils.h" />
 		<Unit filename="../src/colors.c">
-			<Option compilerVar="CPP" />
+			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/colors.h" />
 		<Unit filename="../src/input.c">
