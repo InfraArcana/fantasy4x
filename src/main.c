@@ -7,13 +7,14 @@
 #include "input.h"
 #include "cmn_data.h"
 
-#include <limits.h>
+#include <string.h>
+#include <stdlib.h>
 
 #ifdef _WIN32
 #undef main
 #endif
 int main(int argc, char* argv[]) {
-  str_buffer_t str_buffer = "First part.";
+  char str_buffer[80];
 
   TRACE_FUNC_BEGIN;
 
@@ -26,15 +27,16 @@ int main(int argc, char* argv[]) {
   clear_scr();
   draw_text_xy("Weeoo", 1, 1, &clr_white, &clr_black);
 
-  str_append(&str_buffer, " Second part.");
+  strcpy(str_buffer, "Oh hello!");
   draw_text_xy(str_buffer, 1, 2, &clr_white, &clr_black);
 
-  str_set(&str_buffer, "Hi!");
-  draw_text_xy(str_buffer, 1, 3, &clr_white, &clr_black);
+  draw_text_xy(to_str(str_buffer, 20, 3), 1, 3, &clr_white, &clr_black);
+
+  draw_text_xy(str_app(str_buffer, 20, " Hi?"), 1, 3, &clr_white, &clr_black);
 
   render_present();
 
-  sleep(4000);
+  sleep(2000);
 
   render_cleanup();
   api_cleanup();

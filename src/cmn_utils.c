@@ -1,42 +1,29 @@
 #include "cmn_utils.h"
 
 #include <stdio.h>
+#include <string.h>
 
 /*--------------------------------------------------------- STRING HANDLING */
-void to_str(const long int V, str_buffer_t* str_buffer_ptr) {
-  char* str_buffer = *str_buffer_ptr;
-
-  assert(NR_ELEMS(str_buffer) == STR_BUFFER_SIZE);
-  sprintf(str_buffer, "%d", V);
+char* to_str(char* dest, size_t size, const int V) {
+  if(size > 0) {sprintf(dest, "%d", V);}
+  return dest;
 }
 
-void str_append(str_buffer_t* str_buffer_ptr, const char* app_str) {
-  char* str_buffer = *str_buffer_ptr;
+char* str_app(char* dest, size_t size, const char* app) {
+  if(size > 0) {
+    /* Move to first null terminator */
+    while(*dest != '\0') {
+      ++dest;
+    }
 
-  assert(NR_ELEMS(*str_buffer_ptr) == STR_BUFFER_SIZE);
-
-  while(*str_buffer != '\0') {
-    ++str_buffer;
+    while(*app != '\0') {
+      *dest = *app;
+      ++dest;
+      ++app;
+    }
+    *dest = '\0';
   }
-  while(*app_str != '\0') {
-    *str_buffer = *app_str;
-    ++str_buffer;
-    ++app_str;
-  }
-  *str_buffer = '\0';
-}
-
-void str_set(str_buffer_t* str_buffer_ptr, const char* str) {
-  char* str_buffer = *str_buffer_ptr;
-
-  assert(NR_ELEMS(*str_buffer_ptr) == STR_BUFFER_SIZE);
-
-  while(*str != '\0') {
-    *str_buffer = *str;
-    ++str;
-    ++str_buffer;
-  }
-  *str_buffer = '\0';
+  return dest;
 }
 
 /*--------------------------------------------------------- POSITION */

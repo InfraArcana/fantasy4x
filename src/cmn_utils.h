@@ -7,14 +7,11 @@
 #define NR_ELEMS(a) (sizeof(a) / sizeof(a[0]))
 
 /*--------------------------------------------------------- STRING HANDLING */
-typedef char str_buffer_t[STR_BUFFER_SIZE];
+char* to_str(char* dest, size_t size, const int V);
 
-/* Note: buffer must have size "STR_BUFFER_SIZE" */
-void to_str(const long int V, str_buffer_t* str_buffer_ptr);
+char* str_app(char* dest, size_t size, const char* app);
 
-void str_append(str_buffer_t* str_buffer_ptr, const char* app_str);
-
-void str_set(str_buffer_t* str_buffer_ptr, const char* str);
+/*void str_set(str_buffer_t* str_buffer_ptr, const char* str);*/
 
 /*--------------------------------------------------------- POSITION */
 typedef struct {int x, y;} P;
