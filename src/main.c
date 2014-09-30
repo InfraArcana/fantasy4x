@@ -14,8 +14,6 @@
 #undef main
 #endif
 int main(int argc, char* argv[]) {
-  char str_buffer[80];
-
   TRACE_FUNC_BEGIN;
 
   (void)argc;
@@ -26,6 +24,8 @@ int main(int argc, char* argv[]) {
 
   clear_scr();
   draw_text_xy("Weeoo", 1, 1, &clr_white, &clr_black);
+
+  char str_buffer[80];
 
   strcpy(str_buffer, "Oh hello!");
   draw_text_xy(str_buffer, 1, 2, &clr_white, &clr_black);

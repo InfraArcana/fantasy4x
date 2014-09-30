@@ -20,7 +20,7 @@ static void set_render_clr_(const Clr* const clr) {
 
 static Uint32 get_px_(SDL_Surface* const surface, const int PX_X, const int PX_Y) {
   int bpp = surface->format->BytesPerPixel;
-  /* Here p is the address to the pixel we want to retrieve */
+  //Here p is the address to the pixel we want to retrieve
   Uint8* p = (Uint8*)surface->pixels + PX_Y * surface->pitch + PX_X * bpp;
 
   switch(bpp) {
@@ -44,18 +44,14 @@ static void put_px_(const P* const px_p) {
 }
 
 static void load_font_data_() {
-  SDL_Surface*  font_surface_tmp  = NULL;
-  Uint32        clr_bg            = 0;
-  int x, y;
-
   TRACE_FUNC_BEGIN;
 
-  font_surface_tmp  = IMG_Load(font_img_path);
+  SDL_Surface* font_surface_tmp = IMG_Load(font_img_path);
   assert(font_surface_tmp && "Failed to load font image");
-  clr_bg            = SDL_MapRGB(font_surface_tmp->format, 0, 0, 0);
+  Uint32 clr_bg                 = SDL_MapRGB(font_surface_tmp->format, 0, 0, 0);
 
-  for(y = 0; y < font_surface_tmp->h; ++y) {
-    for(x = 0; x < font_surface_tmp->w; ++x) {
+  for(int y = 0; y < font_surface_tmp->h; ++y) {
+    for(int x = 0; x < font_surface_tmp->w; ++x) {
       font_px_data_[x][y] = get_px_(font_surface_tmp, x, y) != clr_bg;
     }
   }
@@ -180,18 +176,19 @@ static void get_glyph_sheet_pos_(const char GLYPH, P* const p_ptr) {
 
 static void put_pxs_for_glyph_(const char GLYPH, const P* const px_p,
                                const Clr* const clr) {
-  P sheet_p, sheet_px_p0, sheet_px_p1, sheet_px_p, scr_px_p;
-
+  P sheet_p;
   get_glyph_sheet_pos_(GLYPH, &sheet_p);
 
   if(sheet_p.x >= 0) {
-    sheet_px_p0 = sheet_p;
+    P sheet_px_p0 = sheet_p;
     p_multipl_xy(&sheet_px_p0, CELL_PX_W, CELL_PX_H);
 
-    sheet_px_p1 = sheet_px_p0;
+    P sheet_px_p1 = sheet_px_p0;
     p_offset_xy(&sheet_px_p1, CELL_PX_W - 1, CELL_PX_H - 1);
 
-    scr_px_p = *px_p;
+    P scr_px_p = *px_p;
+
+    P sheet_px_p;
 
     set_render_clr_(clr);
 
@@ -208,28 +205,26 @@ static void put_pxs_for_glyph_(const char GLYPH, const P* const px_p,
 
 static void draw_glyph_at_px(const char GLYPH, const P* px_p, const Clr* clr,
                              const bool DRAW_BG_CLR, const Clr* bg_clr) {
-  /* TODO Background color
-  if(DRAW_BG_CLR) {
-    draw_rect(px_p, P(CELL_PX_W, CELL_PX_H), bgClr, RectType::filled);
-  }
-  */
+  //TODO Background color
+//  if(DRAW_BG_CLR) {
+//    draw_rect(px_p, P(CELL_PX_W, CELL_PX_H), bgClr, RectType::filled);
+//  }
+
   put_pxs_for_glyph_(GLYPH, px_p, clr);
 }
 
-/*
-static void draw_glyph_in_map_(const char GLYPH, const P* p, const Clr* clr,
-                               const Clr* bg_clr) {
-  if(is_inited_()) {
-    if(p->x >= 0 && p->y >= 0 && p->x < MAP_W && p->y < MAP_H) {
-      P px_p = *p;
-
-      p_multipl_xy(&px_p, CELL_PX_W, CELL_PX_H);
-
-      draw_glyph_at_px(GLYPH, &px_p, clr, true, bg_clr);
-    }
-  }
-}
-*/
+//static void draw_glyph_in_map_(const char GLYPH, const P* p, const Clr* clr,
+//                               const Clr* bg_clr) {
+//  if(is_inited_()) {
+//    if(p->x >= 0 && p->y >= 0 && p->x < MAP_W && p->y < MAP_H) {
+//      P px_p = *p;
+//
+//      p_multipl_xy(&px_p, CELL_PX_W, CELL_PX_H);
+//
+//      draw_glyph_at_px(GLYPH, &px_p, clr, true, bg_clr);
+//    }
+//  }
+//}
 
 void render_init() {
   const char title[] = "Fantasy 4x " GAME_VERSION_LABEL;
@@ -286,13 +281,12 @@ void render_present() {
 void draw_text(const char* text, const P* p, const Clr* clr, const Clr* bg_clr) {
   if(is_inited_()) {
     if(p->y >= 0 && p->y < SCR_H) {
-      const char* str_ptr = text;
-      P           px_p;
-
-      px_p = *p;
+      P px_p = *p;
       p_multipl_xy(&px_p, CELL_PX_W, CELL_PX_H);
 
       /*drawRect(pxPos, P(LEN * CELL_PX_W, CELL_PX_H), bgClr, RectType::filled);*/
+
+      const char* str_ptr = text;
 
       while(*str_ptr != '\0') {
         if(px_p.x < 0 || px_p.x >= SCR_PX_W) {
@@ -308,7 +302,6 @@ void draw_text(const char* text, const P* p, const Clr* clr, const Clr* bg_clr) 
 
 void draw_text_xy(const char* text, const int X, const int Y, const Clr* clr,
                   const Clr* bg_clr) {
-  P p;
-  p_set_xy(&p, X, Y);
+  P p = { X, Y };
   draw_text(text, &p, clr, bg_clr);
 }

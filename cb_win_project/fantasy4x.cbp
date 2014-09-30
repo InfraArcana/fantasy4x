@@ -63,7 +63,7 @@
 			<Add option="-Wfatal-errors" />
 			<Add option="-Wextra" />
 			<Add option="-Wall" />
-			<Add option="-ansi" />
+			<Add option="-std=c99" />
 			<Add directory="../SDL2/include" />
 		</Compiler>
 		<Linker>

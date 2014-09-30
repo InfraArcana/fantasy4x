@@ -7,7 +7,7 @@
 
 extern const int SCR_BPP;
 
-/* TODO Map bigger than screen(?) */
+//TODO Map bigger than screen(?)
 #define MAP_W       80
 #define MAP_H       24
 #define MAP_MID_X   MAP_W / 2
@@ -20,14 +20,14 @@ extern const int SCR_BPP;
 
 #define STR_BUFFER_SIZE SCR_W
 
-/*-----------------------------------------------------------------------------*/
-/* TODO Move to Config */
+//-----------------------------------------------------------------------------
+//TODO Move to Config
 #define CELL_PX_W   8
 #define CELL_PX_H   12
 #define SCR_PX_W    SCR_W * CELL_PX_W
 #define SCR_PX_H    SCR_H * CELL_PX_H
 extern const char font_img_path[];
 extern const bool IS_FULLSCREEN;
-/*-----------------------------------------------------------------------------*/
+//-----------------------------------------------------------------------------
 
 #endif
