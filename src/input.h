@@ -1,7 +1,10 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-//TODO This is a placeholder
-void read();
+#include "base.h"
 
-#endif
+void input_init();
+
+void input_get_cmd(bool* quit_game);
+
+#endif // INPUT_H

@@ -7,14 +7,13 @@
 
 extern const int SCR_BPP;
 
-//TODO Map bigger than screen(?)
-#define MAP_W       80
-#define MAP_H       24
+#define MAP_W       250
+#define MAP_H       250
 #define MAP_MID_X   MAP_W / 2
 #define MAP_MID_Y   MAP_H / 2
 
-#define SCR_W       MAP_W
-#define SCR_H       MAP_H
+#define SCR_W       80
+#define SCR_H       24
 #define SCR_MID_X   SCR_W / 2
 #define SCR_MID_Y   SCR_H / 2
 
@@ -30,4 +29,4 @@ extern const char font_img_path[];
 extern const bool IS_FULLSCREEN;
 //-----------------------------------------------------------------------------
 
-#endif
+#endif // CMN_DATA_H

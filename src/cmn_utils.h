@@ -6,52 +6,64 @@
 
 #define NR_ELEMS(a) (sizeof(a) / sizeof(a[0]))
 
+//--------------------------------------------------------- MIN/MAX
+int min(int a, int b);
+
+int max(int a, int b);
+
 //--------------------------------------------------------- STRING HANDLING
-char* to_str(char* dest, size_t size, const int V);
+char* to_str(char* dest, size_t size, int v);
 
 char* str_app(char* dest, size_t size, const char* app);
 
 //--------------------------------------------------------- POSITION
-typedef struct {int x, y;} P;
+struct pos {int x, y;};
 
-//bool p_is_eq(const P* const p0, const P* const p1);
+//bool p_is_eq(const struct pos* p0, const struct pos* p1);
 
-//void p_signs(const P* const p, P* const signs_ptr);
+//void p_signs(const struct pos* p, pos* const signs_ptr);
 
-//void p_set(P* const p, const P* const new_p);
+//void p_set(struct pos* p, const struct pos* new_p);
 
-void p_set_xy(P* const p, const int X, const int Y);
+void p_set_xy(struct pos* p, int x, int y);
 
-//void p_offset(P* const p, const P* const pd);
+//void p_offset(struct pos* const p, const struct pos* const pd);
 
-void p_offset_xy(P* const p, const int DX, int const DY);
+void p_offset_xy(struct pos* p, const int DX, int const DY);
 
-//void p_multipl(P* const p, const int V);
+//void p_multipl(struct pos* const p, const int V);
 
-void p_multipl_xy(P* const p, const int X_FACTOR, const int Y_FACTOR);
+void p_multipl_xy(struct pos* p, const int X_FACTOR, const int Y_FACTOR);
 
-//void p_div(P* const p, const int V);
+//void p_div(struct pos* const p, const int V);
 
 //--------------------------------------------------------- RECTANGLE
-typedef struct {P p0; P p1;} Rect;
+struct rect {struct pos p0; struct pos p1;};
 
-//void rect_set(Rect* const r, const P* const p0, const P* const p1);
+//void rect_set(Rect* r, const struct pos* p0, const struct pos* p1);
 
-//void rect_set_xy(Rect* r, const int X0, const int Y0, const int X1, const int Y1);
+//void rect_set_xy(Rect* r, int x0, int y0, int x1, int y1);
 
-//--------------------------------------------------------- GLYPH AND COLOR
-typedef struct {char glyph; Clr clr; Clr clrBg;} GlyphAndClr;
+//--------------------------------------------------------- CHAR AND COLOR
+struct char_and_clr {
+  char        ch;
+  const Clr*  clr;
+  const Clr*  clr_bg;
+};
 
 //--------------------------------------------------------- STRING AND COLOR
-typedef struct {char* str; Clr clr;} StrAndClr;
+struct str_and_clr {
+  char* str;
+  Clr   clr;
+};
 
 //--------------------------------------------------------- DICE PARAMATER
-//typedef struct {
+//struct dice_param {
 //public:
 //  DiceParam() : rolls(1), sides(100), plus(0) {}
 //
-//  DiceParam(const int ROLLS, const int SIDES, const int PLUS = 0) :
-//    rolls(ROLLS), sides(SIDES), plus(PLUS) {}
+//  DiceParam(int rolls_, int sides_, int plus_ = 0) :
+//    rolls(rolls_), sides(sides_), plus(plus_) {}
 //
 //  DiceParam(const DiceParam& other) :
 //    rolls(other.rolls), sides(other.sides), plus(other.plus) {}
@@ -66,20 +78,20 @@ typedef struct {char* str; Clr clr;} StrAndClr;
 //  inline int getHighest() const {return (rolls * sides) + plus;}
 //
 //  int rolls, sides, plus;
-//} DiceParam;
+//};
 
 //--------------------------------------------------------- RANGE
-//typedef struct {
+//struct range {
 //  Range() : lower(-1), upper(-1) {}
 //
-//  Range(const int LOWER, const int UPPER) :
-//    lower(LOWER), upper(UPPER) {}
+//  Range(const int lower_, const int upper_) :
+//    lower(lower_), upper(upper_) {}
 //
 //  int lower, upper;
-//} Range;
+//};
 
-// Useful to e.g. iterate over all directions, or passing as direction parameter
-enum Dir {
+//Useful to iterate over in algorithms, or passing as direction parameter
+enum dir {
   DOWN_LEFT   = 1,
   DOWN        = 2,
   DOWN_RIGHT  = 3,
@@ -92,4 +104,4 @@ enum Dir {
   DIR_END     = 10
 };
 
-#endif
+#endif // CMN_UTILS_H

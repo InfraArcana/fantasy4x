@@ -34,12 +34,12 @@ void api_cleanup() {
   TRACE_FUNC_END;
 }
 
-void sleep(const Uint32 DURATION) {
+void sleep(Uint32 duration) {
   if(api_inited_) {
-    if(DURATION == 1) {
+    if(duration == 1) {
       SDL_Delay(1);
     } else {
-      const Uint32 WAIT_UNTIL = SDL_GetTicks() + DURATION;
+      const Uint32 WAIT_UNTIL = SDL_GetTicks() + duration;
       while(SDL_GetTicks() < WAIT_UNTIL) {SDL_PumpEvents();}
     }
   }

@@ -58,4 +58,4 @@ typedef enum {false, true} bool;
 
 #endif //NDEBUG
 
-#endif
+#endif // TRACE_H

@@ -39,4 +39,4 @@ extern const Clr clr_orange;
 //extern const Clr clr_msg_bad;
 //extern const Clr clr_msg_crit;
 
-#endif
+#endif // COLORS_H

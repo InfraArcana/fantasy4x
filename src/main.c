@@ -6,6 +6,7 @@
 #include "render.h"
 #include "input.h"
 #include "cmn_data.h"
+#include "world.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -21,22 +22,24 @@ int main(int argc, char* argv[]) {
 
   api_init();
   render_init();
+  input_init();
+  world_init();
+
+  bool quit_game = false;
 
   clear_scr();
-  draw_text_xy("Weeoo", 1, 1, &clr_white, &clr_black);
 
-  char str_buffer[80];
+  while(!quit_game) {
+    clear_scr();
 
-  strcpy(str_buffer, "Oh hello!");
-  draw_text_xy(str_buffer, 1, 2, &clr_white, &clr_black);
+    draw_normal_mode();
 
-  draw_text_xy(to_str(str_buffer, 20, 3), 1, 3, &clr_white, &clr_black);
+    //draw_text_xy("Hm?", 10, 5, &clr_white, NULL);
 
-  draw_text_xy(str_app(str_buffer, 20, " Hi?"), 1, 3, &clr_white, &clr_black);
+    render_present();
 
-  render_present();
-
-  sleep(2000);
+    input_get_cmd(&quit_game);
+  }
 
   render_cleanup();
   api_cleanup();

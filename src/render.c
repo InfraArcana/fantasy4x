@@ -4,9 +4,12 @@
 
 #include "base.h"
 #include "cmn_data.h"
+#include "cmn_utils.h"
+#include "world.h"
 
 SDL_Window*   sdl_window_   = NULL;
 SDL_Renderer* sdl_renderer_ = NULL;
+struct pos    viewport_     = {0, 0};
 
 bool font_px_data_[258][176];
 
@@ -14,33 +17,29 @@ static bool is_inited_() {
   return sdl_window_ != NULL;
 }
 
-static void set_render_clr_(const Clr* const clr) {
+static void set_render_clr_(const Clr* clr) {
   SDL_SetRenderDrawColor(sdl_renderer_, clr->r, clr->g, clr->b, SDL_ALPHA_OPAQUE);
 }
 
-static Uint32 get_px_(SDL_Surface* const surface, const int PX_X, const int PX_Y) {
+static Uint32 get_px_(const SDL_Surface* surface, int px_x, int px_y) {
   int bpp = surface->format->BytesPerPixel;
   //Here p is the address to the pixel we want to retrieve
-  Uint8* p = (Uint8*)surface->pixels + PX_Y * surface->pitch + PX_X * bpp;
+  Uint8* px = (Uint8*)surface->pixels + px_y * surface->pitch + px_x * bpp;
 
   switch(bpp) {
-    case 1:   return *p;          break;
-    case 2:   return *(Uint16*)p; break;
+    case 1:   return *px;           break;
+    case 2:   return *(Uint16*)px;  break;
     case 3: {
       if(SDL_BYTEORDER == SDL_BIG_ENDIAN) {
-        return p[0] << 16 | p[1] << 8 | p[2];
+        return px[0] << 16 | px[1] << 8 | px[2];
       }   else {
-        return p[0] | p[1] << 8 | p[2] << 16;
+        return px[0] | px[1] << 8 | px[2] << 16;
       }
     } break;
-    case 4:   return *(Uint32*)p; break;
-    default:  return -1;          break;
+    case 4:   return *(Uint32*)px;  break;
+    default:  return -1;            break;
   }
   return -1;
-}
-
-static void put_px_(const P* const px_p) {
-  SDL_RenderDrawPoint(sdl_renderer_, px_p->x, px_p->y);
 }
 
 static void load_font_data_() {
@@ -48,7 +47,7 @@ static void load_font_data_() {
 
   SDL_Surface* font_surface_tmp = IMG_Load(font_img_path);
   assert(font_surface_tmp && "Failed to load font image");
-  Uint32 clr_bg                 = SDL_MapRGB(font_surface_tmp->format, 0, 0, 0);
+  Uint32 clr_bg = SDL_MapRGB(font_surface_tmp->format, 0, 0, 0);
 
   for(int y = 0; y < font_surface_tmp->h; ++y) {
     for(int x = 0; x < font_surface_tmp->w; ++x) {
@@ -61,10 +60,10 @@ static void load_font_data_() {
   TRACE_FUNC_END;
 }
 
-static void get_glyph_sheet_pos_(const char GLYPH, P* const p_ptr) {
+static void get_char_sheet_pos_(char ch, struct pos* p_ptr) {
   p_set_xy(p_ptr, -1, -1);
 
-  switch(GLYPH) {
+  switch(ch) {
     default:  {} break;
     case ' ': p_set_xy(p_ptr, 0, 0);    break;
     case '!': p_set_xy(p_ptr, 1, 0);    break;
@@ -171,31 +170,32 @@ static void get_glyph_sheet_pos_(const char GLYPH, P* const p_ptr) {
     case   9: p_set_xy(p_ptr, 7, 6);    break;
     case  10: p_set_xy(p_ptr, 8, 6);    break;
   }
-  assert(p_ptr->x >= 0 && "Illegal glyph");
+  assert(p_ptr->x >= 0 && "Illegal character");
 }
 
-static void put_pxs_for_glyph_(const char GLYPH, const P* const px_p,
-                               const Clr* const clr) {
-  P sheet_p;
-  get_glyph_sheet_pos_(GLYPH, &sheet_p);
+static void put_pxs_for_char_(char ch, const struct pos* px_p, const Clr* clr) {
+  struct pos sheet_p;
+  get_char_sheet_pos_(ch, &sheet_p);
 
   if(sheet_p.x >= 0) {
-    P sheet_px_p0 = sheet_p;
+    struct pos sheet_px_p0 = sheet_p;
     p_multipl_xy(&sheet_px_p0, CELL_PX_W, CELL_PX_H);
 
-    P sheet_px_p1 = sheet_px_p0;
+    struct pos sheet_px_p1 = sheet_px_p0;
     p_offset_xy(&sheet_px_p1, CELL_PX_W - 1, CELL_PX_H - 1);
 
-    P scr_px_p = *px_p;
+    struct pos scr_px_p = *px_p;
 
-    P sheet_px_p;
+    struct pos sheet_px_p;
 
     set_render_clr_(clr);
 
     for(sheet_px_p.y = sheet_px_p0.y; sheet_px_p.y <= sheet_px_p1.y; ++sheet_px_p.y) {
       scr_px_p.x = px_p->x;
       for(sheet_px_p.x = sheet_px_p0.x; sheet_px_p.x <= sheet_px_p1.x; ++sheet_px_p.x) {
-        if(font_px_data_[sheet_px_p.x][sheet_px_p.y]) {put_px_(&scr_px_p);}
+        if(font_px_data_[sheet_px_p.x][sheet_px_p.y]) {
+          SDL_RenderDrawPoint(sdl_renderer_, scr_px_p.x, scr_px_p.y);
+        }
         ++scr_px_p.x;
       }
       ++scr_px_p.y;
@@ -203,25 +203,34 @@ static void put_pxs_for_glyph_(const char GLYPH, const P* const px_p,
   }
 }
 
-static void draw_glyph_at_px(const char GLYPH, const P* px_p, const Clr* clr,
-                             const bool DRAW_BG_CLR, const Clr* bg_clr) {
+static void get_window_px_size(struct pos* p_ptr) {
+  SDL_GetWindowSize(sdl_window_, &p_ptr->x, &p_ptr->y);
+}
+
+static void draw_char_at_px(char ch, const struct pos* px_p, const Clr* clr,
+                            const Clr* bg_clr) {
   //TODO Background color
-//  if(DRAW_BG_CLR) {
+//  if(bg_clr != NULL) {
 //    draw_rect(px_p, P(CELL_PX_W, CELL_PX_H), bgClr, RectType::filled);
 //  }
 
-  put_pxs_for_glyph_(GLYPH, px_p, clr);
+  put_pxs_for_char_(ch, px_p, clr);
 }
 
-//static void draw_glyph_in_map_(const char GLYPH, const P* p, const Clr* clr,
-//                               const Clr* bg_clr) {
+static void draw_char_at(char ch, const struct pos* p, const Clr* clr,
+                         const Clr* bg_clr) {
+  struct pos px_p = {p->x * CELL_PX_W, p->y * CELL_PX_H};
+  draw_char_at_px(ch, &px_p, clr, bg_clr);
+}
+
+//static void draw_char_in_map_(char ch, const P* p, const Clr* clr, const Clr* bg_clr) {
 //  if(is_inited_()) {
 //    if(p->x >= 0 && p->y >= 0 && p->x < MAP_W && p->y < MAP_H) {
 //      P px_p = *p;
 //
 //      p_multipl_xy(&px_p, CELL_PX_W, CELL_PX_H);
 //
-//      draw_glyph_at_px(GLYPH, &px_p, clr, true, bg_clr);
+//      draw_char_at_px(ch, &px_p, clr, true, bg_clr);
 //    }
 //  }
 //}
@@ -240,7 +249,7 @@ void render_init() {
                   SDL_WINDOWPOS_UNDEFINED,
                   SDL_WINDOWPOS_UNDEFINED,
                   SCR_PX_W, SCR_PX_H,
-                  SDL_WINDOW_SHOWN);
+                  SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
   sdl_renderer_ = SDL_CreateRenderer(sdl_window_, -1, SDL_RENDERER_ACCELERATED);
 
@@ -278,10 +287,26 @@ void render_present() {
   }
 }
 
-void draw_text(const char* text, const P* p, const Clr* clr, const Clr* bg_clr) {
+void on_window_resized() {
+  if(is_inited_()) {
+    Uint32 sdl_window_flags = SDL_GetWindowFlags(sdl_window_);
+    if(
+      !(sdl_window_flags & SDL_WINDOW_MAXIMIZED)   &&
+      !(sdl_window_flags & SDL_WINDOW_FULLSCREEN)  &&
+      !(sdl_window_flags & SDL_WINDOW_FULLSCREEN_DESKTOP)) {
+      struct pos px_size;
+      get_window_px_size(&px_size);
+      px_size.x = (px_size.x / CELL_PX_W) * CELL_PX_W;
+      px_size.y = (px_size.y / CELL_PX_H) * CELL_PX_H;
+      SDL_SetWindowSize(sdl_window_, px_size.x, px_size.y);
+    }
+  }
+}
+
+void draw_text(const char* text, const struct pos* p, const Clr* clr, const Clr* bg_clr) {
   if(is_inited_()) {
     if(p->y >= 0 && p->y < SCR_H) {
-      P px_p = *p;
+      struct pos px_p = *p;
       p_multipl_xy(&px_p, CELL_PX_W, CELL_PX_H);
 
       /*drawRect(pxPos, P(LEN * CELL_PX_W, CELL_PX_H), bgClr, RectType::filled);*/
@@ -292,7 +317,7 @@ void draw_text(const char* text, const P* p, const Clr* clr, const Clr* bg_clr) 
         if(px_p.x < 0 || px_p.x >= SCR_PX_W) {
           return;
         }
-        draw_glyph_at_px(*str_ptr, &px_p, clr, false, &clr_black);
+        draw_char_at_px(*str_ptr, &px_p, clr, NULL);
         p_offset_xy(&px_p, CELL_PX_W, 0);
         ++str_ptr;
       }
@@ -300,8 +325,37 @@ void draw_text(const char* text, const P* p, const Clr* clr, const Clr* bg_clr) 
   }
 }
 
-void draw_text_xy(const char* text, const int X, const int Y, const Clr* clr,
-                  const Clr* bg_clr) {
-  P p = { X, Y };
+void draw_text_xy(const char* text, int x, int y, const Clr* clr, const Clr* bg_clr) {
+  struct pos p = { x, y };
   draw_text(text, &p, clr, bg_clr);
+}
+
+void draw_normal_mode() {
+  struct pos window_px_size = {0, 0};
+  get_window_px_size(&window_px_size);
+
+  const struct pos viewport_max_size = {
+    window_px_size.x / CELL_PX_W,
+    window_px_size.y / CELL_PX_H,
+  };
+
+  //p1 is either limited to the size of the viewport, or to the size of the map,
+  //whichever is smalleest.
+  const struct pos p1 = {
+    min(viewport_.x + viewport_max_size.x, MAP_W - viewport_.x) - 1,
+    min(viewport_.y + viewport_max_size.y, MAP_H - viewport_.y) - 1
+  };
+
+  struct char_and_clr render_data = {.ch = 0, .clr = NULL, .clr_bg = NULL};;
+  struct pos          p           = {0, 0};
+
+  for(int y = viewport_.y; y <= p1.y; ++y) {
+    for(int x = viewport_.x; x <= p1.x; ++x) {
+      p_set_xy(&p, x, y);
+      get_map_cell_render_data(&p, &render_data);
+      if(render_data.clr != NULL) {
+        draw_char_at(render_data.ch, &p, render_data.clr, NULL);
+      }
+    }
+  }
 }

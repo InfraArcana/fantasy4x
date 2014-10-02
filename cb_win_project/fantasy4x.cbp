@@ -98,6 +98,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/render.h" />
+		<Unit filename="../src/world.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/world.h" />
 		<Extensions>
 			<code_completion />
 			<envvars />

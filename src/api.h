@@ -7,6 +7,6 @@ void api_init();
 
 void api_cleanup();
 
-void sleep(const Uint32 DURATION);
+void sleep(Uint32 duration);
 
-#endif
+#endif // API_H
