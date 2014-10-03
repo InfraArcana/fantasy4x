@@ -1,6 +1,10 @@
 #include "world.h"
 
+#include "vector.h"
+
 struct map_cell cells[MAP_W][MAP_H];
+
+struct vec actors;
 
 static void init_cell(struct map_cell* cell) {
   p_set_xy(&cell->p, 0, 0);
@@ -19,6 +23,8 @@ void world_init() {
       cell->clr = &clr_blue;
     }
   }
+
+  v_init(&actors);
 }
 
 void get_map_cell_render_data(const struct pos* p, struct char_and_clr* data_ptr) {
