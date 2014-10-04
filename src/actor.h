@@ -5,6 +5,8 @@ struct actor {
   char* name;
 };
 
-void actor_init(struct actor* actor);
+struct actor* actor_init(struct actor* actor, char* name);
+
+void actor_free(struct actor* actor);
 
 #endif // ACTOR_H

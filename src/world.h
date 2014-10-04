@@ -11,6 +11,8 @@ struct map_cell {
 
 void world_init();
 
+void world_cleanup();
+
 void get_map_cell_render_data(const struct pos* p, struct char_and_clr* data_ptr);
 
 #endif // MAP_H

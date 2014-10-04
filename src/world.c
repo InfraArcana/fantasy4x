@@ -6,7 +6,7 @@
 #include "actor.h"
 
 struct map_cell cells[MAP_W][MAP_H];
-struct l_node   actors;
+struct l_node*  actors = NULL;
 
 static void init_cell(struct map_cell* cell) {
   p_set_xy(&cell->p, 0, 0);
@@ -15,6 +15,8 @@ static void init_cell(struct map_cell* cell) {
 }
 
 void world_init() {
+  TRACE_FUNC_BEGIN;
+
   struct map_cell* cell = NULL;
 
   for(int y = 0; y < MAP_H; ++y) {
@@ -26,13 +28,29 @@ void world_init() {
     }
   }
 
-  l_init(&actors);
-  for(int i = 0; i < 1000; ++i) {
-    struct actor* actor = malloc(sizeof(actor));
-    actor_init(actor);
-    l_add()
+//  for(int i = 0; i < 1000; ++i) {
+//    struct actor* actor = malloc(sizeof(actor));
+//    actor_init(actor);
+//    l_add(&actors, actor);
+//    assert(actors);
+//  }
+
+  TRACE_FUNC_END;
+}
+
+void world_cleanup() {
+  TRACE_FUNC_BEGIN;
+
+  struct l_node* l_node = actors;
+  while(l_node) {
+    struct actor* actor = l_node->data;
+    actor_free(actor);
+    l_node = l_node->next;
   }
-  l_free(&actors);
+
+  l_free(actors);
+
+  TRACE_FUNC_END;
 }
 
 void get_map_cell_render_data(const struct pos* p, struct char_and_clr* data_ptr) {

@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
     input_get_cmd(&quit_game);
   }
 
+  world_cleanup();
   render_cleanup();
   api_cleanup();
 
