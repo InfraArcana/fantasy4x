@@ -3,10 +3,6 @@
 
 #include "cmn_utils.h"
 
-struct actor {
-  char* name;
-};
-
 struct map_cell {
   struct pos  p;
   char        ch;
