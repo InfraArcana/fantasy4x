@@ -170,7 +170,13 @@ static void get_char_sheet_pos_(char ch, struct pos* p_ptr) {
     case   9: p_set_xy(p_ptr, 7, 6);    break;
     case  10: p_set_xy(p_ptr, 8, 6);    break;
   }
-  assert(p_ptr->x >= 0 && "Illegal character");
+  if(p_ptr->x < 0) {
+    char ch_str[2]    = {ch, '\0'};
+    char err_msg[80]  = "Illegal character: ";
+    str_app(err_msg, 80, ch_str);
+    TRACE(err_msg);
+    assert(false);
+  }
 }
 
 static void put_pxs_for_char_(char ch, const struct pos* px_p, const Clr* clr) {
@@ -301,9 +307,12 @@ void on_window_resized() {
       SDL_SetWindowSize(sdl_window_, px_size.x, px_size.y);
     }
   }
+  clear_scr();
+  draw_normal_mode();
+  render_present();
 }
 
-void draw_text(const char* text, const struct pos* p, const Clr* clr, const Clr* bg_clr) {
+void draw_text(const char* text, struct pos* p, const Clr* clr, const Clr* bg_clr) {
   if(is_inited_()) {
     if(p->y >= 0 && p->y < SCR_H) {
       struct pos px_p = *p;
@@ -313,12 +322,21 @@ void draw_text(const char* text, const struct pos* p, const Clr* clr, const Clr*
 
       const char* str_ptr = text;
 
+      const int PX_X0 = px_p.x;
+
       while(*str_ptr != '\0') {
+        bool is_new_line_char = false;
+        if(*str_ptr == '\n') {
+          p_set_xy(&px_p, PX_X0, px_p.y + CELL_PX_H);
+          is_new_line_char = true;
+        }
         if(px_p.x < 0 || px_p.x >= SCR_PX_W) {
           return;
         }
-        draw_char_at_px(*str_ptr, &px_p, clr, NULL);
-        p_offset_xy(&px_p, CELL_PX_W, 0);
+        if(!is_new_line_char) {
+          draw_char_at_px(*str_ptr, &px_p, clr, NULL);
+          p_offset_xy(&px_p, CELL_PX_W, 0);
+        }
         ++str_ptr;
       }
     }

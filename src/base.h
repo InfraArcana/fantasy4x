@@ -8,11 +8,11 @@
 //--------------------------------------------------------------------
 // OPTIONS
 //--------------------------------------------------------------------
-//  Lvl of TRACE output in debug mode
-//  0 : Disabled
-//  1 : Standard
-//  2 : Verbose
-
+/*  Lvl of TRACE output in debug mode
+    0 : Disabled
+    1 : Standard
+    2 : Verbose
+*/
 #define TRACE_LVL 1
 //--------------------------------------------------------------------
 

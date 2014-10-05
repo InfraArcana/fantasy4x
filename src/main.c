@@ -7,6 +7,7 @@
 #include "input.h"
 #include "cmn_data.h"
 #include "world.h"
+#include "file_handling.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -34,7 +35,7 @@ int main(int argc, char* argv[]) {
 
     draw_normal_mode();
 
-    //draw_text_xy("Hm?", 10, 5, &clr_white, NULL);
+    //draw_text_xy(str, 10, 5, &clr_white, NULL);
 
     render_present();
 

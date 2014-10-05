@@ -91,6 +91,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../src/colors.h" />
+		<Unit filename="../src/file_handling.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../src/file_handling.h" />
 		<Unit filename="../src/input.c">
 			<Option compilerVar="CC" />
 		</Unit>

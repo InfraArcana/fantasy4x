@@ -23,8 +23,8 @@ void world_init() {
     for(int x = 0; x < MAP_W; ++x) {
       cell = &cells[x][y];
       init_cell(cell);
-      cell->ch  = '~';
-      cell->clr = &clr_blue;
+      cell->ch  = '.';
+      cell->clr = &clr_green_lgt;
     }
   }
 

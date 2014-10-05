@@ -17,7 +17,7 @@ void on_window_resized();
 //screen, and that the map fills the whole screen.
 void draw_normal_mode();
 
-void draw_text(const char* text, const struct pos* p, const Clr* clr, const Clr* bg_clr);
+void draw_text(const char* text, struct pos* p, const Clr* clr, const Clr* bg_clr);
 
 void draw_text_xy(const char* text, int x, int y, const Clr* clr, const Clr* bg_clr);
 
