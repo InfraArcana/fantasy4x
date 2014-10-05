@@ -11,16 +11,16 @@
 //}
 
 void l_free(struct l_node* head) {
-  assert(head);
+  if(head) {
+    if(head->data) {
+      struct l_node* cur = head;
 
-  if(head->data) {
-    struct l_node* cur = head;
-
-    while(cur) {
-      assert(cur->data);
-      struct l_node* next = cur->next;
-      free(cur);
-      cur = next;
+      while(cur) {
+        assert(cur->data);
+        struct l_node* next = cur->next;
+        free(cur);
+        cur = next;
+      }
     }
   }
 }

@@ -12,3 +12,4 @@ CppCheckResults.xml
 *.layout.orig
 *.depend
 cmd.exe
+desktop.ini

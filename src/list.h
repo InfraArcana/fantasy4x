@@ -8,11 +8,11 @@ struct l_node {
 
 //void l_init(struct l_node* head);
 
-//Note: This will only free the list nodes, not the content.
+//Note: This will only free the list nodes, not the content. "head" may be NULL.
 void l_free(struct l_node* head);
 
-//Note: If head points to a NULL pointer, a new head is allocated. Otherwise a new node
-//is inserted after head.
+//Note: If "head" points to a NULL pointer, the new node will become head. Otherwise a
+//new node is inserted after the current head.
 void l_add(struct l_node** head, void* data);
 
 #endif // LINKED_LIST_H

@@ -28,13 +28,6 @@ void world_init() {
     }
   }
 
-//  for(int i = 0; i < 1000; ++i) {
-//    struct actor* actor = malloc(sizeof(actor));
-//    actor_init(actor);
-//    l_add(&actors, actor);
-//    assert(actors);
-//  }
-
   TRACE_FUNC_END;
 }
 
