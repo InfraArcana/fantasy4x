@@ -60,5 +60,5 @@ size_t file_length(const char* path) {
   }
 
   TRACE_FUNC_END;
-  return stat_result.st_size;
+  return (stat_result.st_size + 1);
 }

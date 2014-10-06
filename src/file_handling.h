@@ -5,10 +5,10 @@
 
 /*  Example: Reading game data from text file.
     ---------------------------------------------
-    char*         path  = "data/names.dat";
-    const size_t  size  = file_get_size(path);
-    char*         str   = malloc(size);
-    file_read(str, size, path);
+    const char*   PATH  = "data/races.dat";
+    const size_t  SIZE  = file_length(PATH);
+    char*         str   = malloc(SIZE);
+    file_read(str, SIZE, PATH);
 
     (Do stuff with the string...)
 
