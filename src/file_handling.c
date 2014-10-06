@@ -13,9 +13,8 @@ char* file_read(char* dest, size_t size, const char* path) {
 
   assert(dest);
 
-  //Make sure last character is null terminator
-  memset(dest, '\0', size);
-  //for(size_t i = 0; i < size; ++i) {dest[i] = '\0';}
+  //Make sure the string will be null terminated
+  str_fill_nul(dest, size);
 
   FILE* stream = fopen(path, "r");
 

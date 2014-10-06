@@ -14,6 +14,10 @@ int max(int a, int b) {
 }
 
 //--------------------------------------------------------- STRING HANDLING
+void str_fill_nul(char* dest, size_t size) {
+  memset(dest, '\0', size);
+}
+
 char* to_str(char* dest, size_t size, int v) {
   if(size > 0) {sprintf(dest, "%d", v);}
   return dest;

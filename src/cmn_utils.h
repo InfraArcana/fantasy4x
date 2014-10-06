@@ -12,6 +12,8 @@ int min(int a, int b);
 int max(int a, int b);
 
 //--------------------------------------------------------- STRING HANDLING
+void str_fill_nul(char* dest, size_t size);
+
 char* to_str(char* dest, size_t size, int v);
 
 void str_alloc(char** dest, const char* str);
