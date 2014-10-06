@@ -1,12 +1,23 @@
 #ifndef ACTOR_H
 #define ACTOR_H
 
-struct actor {
+struct race {
   char* name;
+  char* name_plural;
+  char* name_a;
 };
 
-struct actor* actor_init(struct actor* actor, char* name);
+struct actor {
+  struct race*  race;
+  char*         name;
+};
 
-void actor_free(struct actor* actor);
+void race_data_init();
+
+void race_data_cleanup();
+
+struct actor* actor_init(struct actor* actor);
+
+void          actor_free(struct actor* actor);
 
 #endif // ACTOR_H

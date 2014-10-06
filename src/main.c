@@ -7,7 +7,7 @@
 #include "input.h"
 #include "cmn_data.h"
 #include "world.h"
-#include "file_handling.h"
+#include "actor.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -24,6 +24,7 @@ int main(int argc, char* argv[]) {
   api_init();
   render_init();
   input_init();
+  race_data_init();
   world_init();
 
   bool quit_game = false;
@@ -43,6 +44,7 @@ int main(int argc, char* argv[]) {
   }
 
   world_cleanup();
+  race_data_cleanup();
   render_cleanup();
   api_cleanup();
 

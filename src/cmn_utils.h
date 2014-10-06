@@ -14,6 +14,8 @@ int max(int a, int b);
 //--------------------------------------------------------- STRING HANDLING
 char* to_str(char* dest, size_t size, int v);
 
+void str_alloc(char** dest, const char* str);
+
 char* str_app(char* dest, size_t size, const char* app);
 
 //--------------------------------------------------------- POSITION

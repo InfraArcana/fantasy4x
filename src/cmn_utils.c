@@ -1,5 +1,6 @@
 #include "cmn_utils.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -16,6 +17,15 @@ int max(int a, int b) {
 char* to_str(char* dest, size_t size, int v) {
   if(size > 0) {sprintf(dest, "%d", v);}
   return dest;
+}
+
+void str_alloc(char** dest, const char* str) {
+  *dest = malloc(strlen(str) + 1);
+  if(!*dest) {
+    TRACE("Failed to allocate memory for string");
+    assert(false);
+  }
+  strcpy(*dest, str);
 }
 
 char* str_app(char* dest, size_t size, const char* app) {

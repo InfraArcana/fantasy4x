@@ -1,6 +1,9 @@
 #include "file_handling.h"
 
+#include <unistd.h>
 #include <stdio.h>
+#include <string.h>
+#include <sys/stat.h>
 
 #include "base.h"
 #include "cmn_utils.h"
@@ -10,6 +13,10 @@ char* file_read(char* dest, size_t size, const char* path) {
 
   assert(dest);
 
+  //Make sure last character is null terminator
+  memset(dest, '\0', size);
+  //for(size_t i = 0; i < size; ++i) {dest[i] = '\0';}
+
   FILE* stream = fopen(path, "r");
 
   if(!stream) {
@@ -19,7 +26,19 @@ char* file_read(char* dest, size_t size, const char* path) {
     assert(false);
   }
 
-  fread(dest, size, 1, stream);
+  const size_t FREAD_STATUS = fread(dest, size, 1, stream);
+
+  printf("feof: %d, ferror: %d\n", feof(stream), ferror(stream));
+
+  if(FREAD_STATUS == 0) {
+    if(feof(stream)) {
+      TRACE("Reached end of file.");
+    }
+    if(ferror(stream)) {
+      TRACE("An error occurred while reading file.");
+      assert(false);
+    }
+  }
 
   fclose(stream);
 
@@ -27,24 +46,20 @@ char* file_read(char* dest, size_t size, const char* path) {
   return dest;
 }
 
-size_t file_size(const char* path) {
+size_t file_length(const char* path) {
   TRACE_FUNC_BEGIN;
 
-  FILE* stream = fopen(path, "r");
+  struct stat stat_result;
 
-  if(!stream) {
-    char error_msg[80] = "Failed to open file: ";
+  const int STATUS = stat(path, &stat_result);
+
+  if(STATUS != 0) {
+    char error_msg[80] = "Failed to read file: ";
     str_app(error_msg, 80, path);
     TRACE(error_msg);
     assert(false);
   }
 
-  fseek(stream, 0L, SEEK_END);  //Seek to the end of the file
-  size_t size = ftell(stream);  //Get size
-  fseek(stream, 0L, SEEK_SET);  //Seek back to beginning
-
-  fclose(stream);
-
   TRACE_FUNC_END;
-  return size;
+  return stat_result.st_size;
 }
