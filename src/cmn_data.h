@@ -22,7 +22,7 @@ extern const int SCR_BPP;
 //-----------------------------------------------------------------------------
 //TODO Move to Config
 #define CELL_PX_W   8
-#define CELL_PX_H   12
+#define CELL_PX_H   16
 #define SCR_PX_W    SCR_W * CELL_PX_W
 #define SCR_PX_H    SCR_H * CELL_PX_H
 extern const char font_img_path[];

@@ -10,8 +10,9 @@
 SDL_Window*   sdl_window_   = NULL;
 SDL_Renderer* sdl_renderer_ = NULL;
 struct pos    viewport_     = {0, 0};
+bool          font_px_data_[256][128];
 
-bool font_px_data_[258][176];
+const int NR_FONT_IMAGE_GLYPHS_X = 32;
 
 static bool is_inited_() {
   return sdl_window_ != NULL;
@@ -61,122 +62,9 @@ static void load_font_data_() {
 }
 
 static void get_char_sheet_pos_(char ch, struct pos* p_ptr) {
-  p_set_xy(p_ptr, -1, -1);
-
-  switch(ch) {
-    default:  {} break;
-    case ' ': p_set_xy(p_ptr, 0, 0);    break;
-    case '!': p_set_xy(p_ptr, 1, 0);    break;
-    case '"': p_set_xy(p_ptr, 2, 0);    break;
-    case '#': p_set_xy(p_ptr, 3, 0);    break;
-    case '%': p_set_xy(p_ptr, 4, 0);    break;
-    case '&': p_set_xy(p_ptr, 5, 0);    break;
-    case  39: p_set_xy(p_ptr, 6, 0);    break;
-    case '(': p_set_xy(p_ptr, 7, 0);    break;
-    case ')': p_set_xy(p_ptr, 8, 0);    break;
-    case '*': p_set_xy(p_ptr, 9, 0);    break;
-    case '+': p_set_xy(p_ptr, 10, 0);   break;
-    case ',': p_set_xy(p_ptr, 11, 0);   break;
-    case '-': p_set_xy(p_ptr, 12, 0);   break;
-    case '.': p_set_xy(p_ptr, 13, 0);   break;
-    case '/': p_set_xy(p_ptr, 14, 0);   break;
-    case '0': p_set_xy(p_ptr, 15, 0);   break;
-    case '1': p_set_xy(p_ptr, 0, 1);    break;
-    case '2': p_set_xy(p_ptr, 1, 1);    break;
-    case '3': p_set_xy(p_ptr, 2, 1);    break;
-    case '4': p_set_xy(p_ptr, 3, 1);    break;
-    case '5': p_set_xy(p_ptr, 4, 1);    break;
-    case '6': p_set_xy(p_ptr, 5, 1);    break;
-    case '7': p_set_xy(p_ptr, 6, 1);    break;
-    case '8': p_set_xy(p_ptr, 7, 1);    break;
-    case '9': p_set_xy(p_ptr, 8, 1);    break;
-    case ':': p_set_xy(p_ptr, 9, 1);    break;
-    case ';': p_set_xy(p_ptr, 10, 1);   break;
-    case '<': p_set_xy(p_ptr, 11, 1);   break;
-    case '=': p_set_xy(p_ptr, 12, 1);   break;
-    case '>': p_set_xy(p_ptr, 13, 1);   break;
-    case '?': p_set_xy(p_ptr, 14, 1);   break;
-    case '@': p_set_xy(p_ptr, 15, 1);   break;
-    case 'A': p_set_xy(p_ptr, 0, 2);    break;
-    case 'B': p_set_xy(p_ptr, 1, 2);    break;
-    case 'C': p_set_xy(p_ptr, 2, 2);    break;
-    case 'D': p_set_xy(p_ptr, 3, 2);    break;
-    case 'E': p_set_xy(p_ptr, 4, 2);    break;
-    case 'F': p_set_xy(p_ptr, 5, 2);    break;
-    case 'G': p_set_xy(p_ptr, 6, 2);    break;
-    case 'H': p_set_xy(p_ptr, 7, 2);    break;
-    case 'I': p_set_xy(p_ptr, 8, 2);    break;
-    case 'J': p_set_xy(p_ptr, 9, 2);    break;
-    case 'K': p_set_xy(p_ptr, 10, 2);   break;
-    case 'L': p_set_xy(p_ptr, 11, 2);   break;
-    case 'M': p_set_xy(p_ptr, 12, 2);   break;
-    case 'N': p_set_xy(p_ptr, 13, 2);   break;
-    case 'O': p_set_xy(p_ptr, 14, 2);   break;
-    case 'P': p_set_xy(p_ptr, 15, 2);   break;
-    case 'Q': p_set_xy(p_ptr, 0, 3);    break;
-    case 'R': p_set_xy(p_ptr, 1, 3);    break;
-    case 'S': p_set_xy(p_ptr, 2, 3);    break;
-    case 'T': p_set_xy(p_ptr, 3, 3);    break;
-    case 'U': p_set_xy(p_ptr, 4, 3);    break;
-    case 'V': p_set_xy(p_ptr, 5, 3);    break;
-    case 'W': p_set_xy(p_ptr, 6, 3);    break;
-    case 'X': p_set_xy(p_ptr, 7, 3);    break;
-    case 'Y': p_set_xy(p_ptr, 8, 3);    break;
-    case 'Z': p_set_xy(p_ptr, 9, 3);    break;
-    case '[': p_set_xy(p_ptr, 10, 3);   break;
-    case  92: p_set_xy(p_ptr, 11, 3);   break;
-    case ']': p_set_xy(p_ptr, 12, 3);   break;
-    case '^': p_set_xy(p_ptr, 13, 3);   break;
-    case '_': p_set_xy(p_ptr, 14, 3);   break;
-    case '`': p_set_xy(p_ptr, 15, 3);   break;
-    case 'a': p_set_xy(p_ptr, 0, 4);    break;
-    case 'b': p_set_xy(p_ptr, 1, 4);    break;
-    case 'c': p_set_xy(p_ptr, 2, 4);    break;
-    case 'd': p_set_xy(p_ptr, 3, 4);    break;
-    case 'e': p_set_xy(p_ptr, 4, 4);    break;
-    case 'f': p_set_xy(p_ptr, 5, 4);    break;
-    case 'g': p_set_xy(p_ptr, 6, 4);    break;
-    case 'h': p_set_xy(p_ptr, 7, 4);    break;
-    case 'i': p_set_xy(p_ptr, 8, 4);    break;
-    case 'j': p_set_xy(p_ptr, 9, 4);    break;
-    case 'k': p_set_xy(p_ptr, 10, 4);   break;
-    case 'l': p_set_xy(p_ptr, 11, 4);   break;
-    case 'm': p_set_xy(p_ptr, 12, 4);   break;
-    case 'n': p_set_xy(p_ptr, 13, 4);   break;
-    case 'o': p_set_xy(p_ptr, 14, 4);   break;
-    case 'p': p_set_xy(p_ptr, 15, 4);   break;
-    case 'q': p_set_xy(p_ptr, 0, 5);    break;
-    case 'r': p_set_xy(p_ptr, 1, 5);    break;
-    case 's': p_set_xy(p_ptr, 2, 5);    break;
-    case 't': p_set_xy(p_ptr, 3, 5);    break;
-    case 'u': p_set_xy(p_ptr, 4, 5);    break;
-    case 'v': p_set_xy(p_ptr, 5, 5);    break;
-    case 'w': p_set_xy(p_ptr, 6, 5);    break;
-    case 'x': p_set_xy(p_ptr, 7, 5);    break;
-    case 'y': p_set_xy(p_ptr, 8, 5);    break;
-    case 'z': p_set_xy(p_ptr, 9, 5);    break;
-    case '{': p_set_xy(p_ptr, 10, 5);   break;
-    case '|': p_set_xy(p_ptr, 11, 5);   break;
-    case '}': p_set_xy(p_ptr, 12, 5);   break;
-    case '~': p_set_xy(p_ptr, 13, 5);   break;
-    case   1: p_set_xy(p_ptr, 14, 5);   break;
-    case   2: p_set_xy(p_ptr, 0, 6);    break;
-    case   3: p_set_xy(p_ptr, 1, 6);    break;
-    case   4: p_set_xy(p_ptr, 2, 6);    break;
-    case   5: p_set_xy(p_ptr, 3, 6);    break;
-    case   6: p_set_xy(p_ptr, 4, 6);    break;
-    case   7: p_set_xy(p_ptr, 5, 6);    break;
-    case   8: p_set_xy(p_ptr, 6, 6);    break;
-    case   9: p_set_xy(p_ptr, 7, 6);    break;
-    case  10: p_set_xy(p_ptr, 8, 6);    break;
-  }
-  if(p_ptr->x < 0) {
-    char ch_str[2]    = {ch, '\0'};
-    char err_msg[80]  = "Illegal character: ";
-    str_app(err_msg, 80, ch_str);
-    TRACE(err_msg);
-    assert(false);
-  }
+  const int Y = ch / NR_FONT_IMAGE_GLYPHS_X;
+  const int X = Y == 0 ? ch : (ch % (Y * NR_FONT_IMAGE_GLYPHS_X));
+  p_set_xy(p_ptr, X, Y);
 }
 
 static void put_pxs_for_char_(char ch, const struct pos* px_p, const Clr* clr) {
