@@ -1,7 +1,9 @@
 #ifndef CMN_DATA_H
 #define CMN_DATA_H
 
-#include "base.h"
+#include "base.hpp"
+
+#include <string>
 
 #define GAME_VERSION_LABEL "v0.01"
 
@@ -20,13 +22,13 @@ extern const int SCR_BPP;
 #define STR_BUFFER_SIZE SCR_W
 
 //-----------------------------------------------------------------------------
-//TODO Move to Config
+//TODO: Move to Config
 #define CELL_PX_W   8
 #define CELL_PX_H   16
 #define SCR_PX_W    SCR_W * CELL_PX_W
 #define SCR_PX_H    SCR_H * CELL_PX_H
-extern const char font_img_path[];
-extern const bool IS_FULLSCREEN;
+extern const std::string    font_img_path;
+extern const bool           IS_FULLSCREEN;
 //-----------------------------------------------------------------------------
 
 #endif // CMN_DATA_H

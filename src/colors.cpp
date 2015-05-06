@@ -1,4 +1,4 @@
-#include "colors.h"
+#include "colors.hpp"
 
 const Clr clr_black          = {  0,   0,   0, SDL_ALPHA_OPAQUE};
 const Clr clr_gray           = {128, 128, 128, SDL_ALPHA_OPAQUE};

@@ -3,10 +3,15 @@
 
 #include <SDL.h>
 
-void api_init();
+namespace api
+{
 
-void api_cleanup();
+void init();
+
+void cleanup();
 
 void sleep(Uint32 duration);
+
+} // api
 
 #endif // API_H
