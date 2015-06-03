@@ -4,7 +4,7 @@
 
 #include "base.hpp"
 #include "cmn_data.hpp"
-#include "cmn_utils.hpp"
+#include "utils.hpp"
 #include "world.hpp"
 
 namespace render
@@ -33,7 +33,7 @@ void set_render_clr(const Clr& clr)
 Uint32 get_px(const SDL_Surface& surface, int px_x, int px_y)
 {
     int bpp = surface.format->BytesPerPixel;
-    //Here p is the address to the pixel we want to retrieve
+    // Here p is the address to the pixel we want to retrieve
     Uint8* px = (Uint8*)surface.pixels + px_y * surface.pitch + px_x * bpp;
 
     switch (bpp)
@@ -121,6 +121,37 @@ void put_pxs_for_char(char ch, const Pos& px_p, const Clr& clr)
     }
 }
 
+void draw_rect_px(const Rect& px_r, const Clr& clr)
+{
+    if (is_inited())
+    {
+        SDL_Rect sdl_rect =
+        {
+            (Sint16)px_r.p0.x,
+            (Sint16)px_r.p0.y,
+            (Uint16)(px_r.p1.x - px_r.p0.x + 1),
+            (Uint16)(px_r.p1.y - px_r.p0.y + 1)
+        };
+
+
+        set_render_clr(clr);
+
+        SDL_RenderFillRect(sdl_renderer_, &sdl_rect);
+    }
+}
+
+void draw_rect(const Rect& r, const Clr& clr)
+{
+    const Rect px_r(
+        r.p0.x * CELL_PX_W,
+        r.p0.y * CELL_PX_H,
+        r.p1.x * CELL_PX_W,
+        r.p1.y * CELL_PX_W
+    );
+
+    draw_rect_px(px_r, clr);
+}
+
 void get_window_px_size(Pos& dst)
 {
     SDL_GetWindowSize(sdl_window_, &dst.x, &dst.y);
@@ -128,11 +159,8 @@ void get_window_px_size(Pos& dst)
 
 void draw_char_at_px(char ch, const Pos& px_p, const Clr& clr, const Clr& bg_clr)
 {
-    (void)bg_clr;
-    //TODO: Background color
-//  if(bg_clr != nullptr) {
-//    draw_rect(px_p, P(CELL_PX_W, CELL_PX_H), bgClr, RectType::filled);
-//  }
+    const Rect bg_px_r( px_p, {px_p.x + CELL_PX_W - 1, px_p.y + CELL_PX_H - 1} );
+    draw_rect_px(bg_px_r, bg_clr);
 
     put_pxs_for_char(ch, px_p, clr);
 }
@@ -251,8 +279,6 @@ void draw_text(const std::string& text, const Pos& p, const Clr& clr, const Clr&
     {
         Pos px_p = p * Pos(CELL_PX_W, CELL_PX_H);
 
-        /*drawRect(pxPos, P(LEN * CELL_PX_W, CELL_PX_H), bgClr, RectType::filled);*/
-
         const int PX_X0 = px_p.x;
 
         for (auto it = begin(text); it != end(text); ++it)
@@ -287,24 +313,32 @@ void draw_normal_mode()
         window_px_size.y / CELL_PX_H,
     };
 
-    //p1 is either limited to the size of the viewport, or to the size of the map,
-    //whichever is smalleest.
+    // p1 is either limited to the size of the viewport, or to the size of the map,
+    // whichever is smalleest.
     const Pos p1 =
     {
         std::min(viewport_.x + viewport_max_size.x, MAP_W - viewport_.x) - 1,
         std::min(viewport_.y + viewport_max_size.y, MAP_H - viewport_.y) - 1
     };
 
-    Pos p;
-
-    for (p.x = viewport_.x; p.x <= p1.x; ++p.x)
+    for (int x = viewport_.x; x <= p1.x; ++x)
     {
-        for (p.y = viewport_.y; p.y <= p1.y; ++p.y)
+        for (int y = viewport_.y; y <= p1.y; ++y)
         {
-            Char_And_Clr render_data = world::get_map_cell_render_data(p);
+            const Pos p(x, y);
+
+            const auto& render_data = world::terrain[p.x][p.y]->get_render_data();
 
             draw_char_at(render_data.ch, p, render_data.clr);
         }
+    }
+
+    for (const auto& mob_ptr : world::mobs)
+    {
+        const auto& render_data = mob_ptr->get_render_data();
+        const auto& p           = mob_ptr->get_pos();
+
+        draw_char_at(render_data.ch, p, render_data.clr);
     }
 }
 

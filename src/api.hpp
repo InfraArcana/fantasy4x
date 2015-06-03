@@ -1,5 +1,5 @@
-#ifndef API_H
-#define API_H
+#ifndef API_HPP
+#define API_HPP
 
 #include <SDL.h>
 
@@ -14,4 +14,4 @@ void sleep(Uint32 duration);
 
 } // api
 
-#endif // API_H
+#endif // API_HPP

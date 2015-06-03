@@ -1,8 +1,8 @@
-#ifndef RENDER_H
-#define RENDER_H
+#ifndef RENDER_HPP
+#define RENDER_HPP
 
 #include "colors.hpp"
-#include "cmn_utils.hpp"
+#include "utils.hpp"
 
 namespace render
 {
@@ -22,8 +22,9 @@ void on_window_resized();
 //screen, and that the map fills the whole screen.
 void draw_normal_mode();
 
-void draw_text(const std::string& text, const Pos& p, const Clr& clr, const Clr& bg_clr = clr_black);
+void draw_text(const std::string& text, const Pos& p, const Clr& clr,
+               const Clr& bg_clr = clr_black);
 
 }
 
-#endif // H
+#endif // RENDER_HPP

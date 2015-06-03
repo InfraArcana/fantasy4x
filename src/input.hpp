@@ -1,5 +1,5 @@
-#ifndef INPUT_H
-#define INPUT_H
+#ifndef INPUT_HPP
+#define INPUT_HPP
 
 #include "base.hpp"
 
@@ -12,4 +12,4 @@ void get_cmd(bool* quit_game);
 
 } // input
 
-#endif // INPUT_H
+#endif // INPUT_HPP

@@ -3,20 +3,10 @@
 #include <fstream>
 
 #include "base.hpp"
-#include "cmn_utils.hpp"
+#include "utils.hpp"
 
 namespace file_io
 {
-
-namespace
-{
-
-bool is_content_line(const std::string& line)
-{
-    return !line.empty() && line[0] != '#';
-}
-
-} // namespace
 
 Text_Lines read(const std::string path)
 {
@@ -77,7 +67,7 @@ Data_File_Content read_data_file(const std::string path)
     }
 
     // Unless there are empty lines after the last section, it will not yet have been added to the
-    // file content list - then we do that here.
+    // file content list - so then we do that here.
     if (!section.empty())
     {
         ret.push_back(section);

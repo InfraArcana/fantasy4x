@@ -1,5 +1,5 @@
-#ifndef CMN_UTILS_H
-#define CMN_UTILS_H
+#ifndef UTILS_HPP
+#define UTILS_HPP
 
 #include <string>
 #include <vector>
@@ -14,7 +14,7 @@ typedef std::vector<std::string> Text_Lines;
 
 struct Char_And_Clr
 {
-    Char_And_Clr(char ch_, Clr clr_, Clr clr_bg_) :
+    Char_And_Clr(char ch_, Clr clr_, Clr clr_bg_ = clr_black) :
         ch      (ch_),
         clr     (clr_),
         clr_bg  (clr_bg_) {}
@@ -176,4 +176,4 @@ enum dir
     DIR_END     = 10
 };
 
-#endif // CMN_UTILS_H
+#endif // CMN_UTILS_HPP

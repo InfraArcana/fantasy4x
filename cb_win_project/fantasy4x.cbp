@@ -15,7 +15,6 @@
 				<Compiler>
 					<Add option="-g" />
 					<Add option="-fno-exceptions" />
-					<Add directory="../src/debug_mode" />
 				</Compiler>
 				<ExtraCommands>
 					<Add after='cmd /c xcopy /e /y &quot;$(PROJECT_DIR)..\resources\*&quot; &quot;$(PROJECT_DIR)..\target\debug\&quot;' />
@@ -36,7 +35,7 @@
 					<Add option="-O2" />
 					<Add option="-fno-exceptions" />
 					<Add option="-Wno-unused-value" />
-					<Add directory="../src/release_mode" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -80,24 +79,23 @@
 			<Add option="-lSDL2main -lSDL2 -lSDL2_image" />
 			<Add directory="../SDL2/lib" />
 		</Linker>
-		<Unit filename="../src/actor.cpp" />
-		<Unit filename="../src/actor.hpp" />
 		<Unit filename="../src/api.cpp" />
 		<Unit filename="../src/api.hpp" />
 		<Unit filename="../src/base.hpp" />
 		<Unit filename="../src/cmn_data.cpp" />
 		<Unit filename="../src/cmn_data.hpp" />
-		<Unit filename="../src/cmn_utils.cpp" />
-		<Unit filename="../src/cmn_utils.hpp" />
-		<Unit filename="../src/colors.cpp" />
 		<Unit filename="../src/colors.hpp" />
 		<Unit filename="../src/file_io.cpp" />
 		<Unit filename="../src/file_io.hpp" />
 		<Unit filename="../src/input.cpp" />
 		<Unit filename="../src/input.hpp" />
 		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/mon.cpp" />
+		<Unit filename="../src/mon.hpp" />
 		<Unit filename="../src/render.cpp" />
 		<Unit filename="../src/render.hpp" />
+		<Unit filename="../src/utils.cpp" />
+		<Unit filename="../src/utils.hpp" />
 		<Unit filename="../src/world.cpp" />
 		<Unit filename="../src/world.hpp" />
 		<Extensions>

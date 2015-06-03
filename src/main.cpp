@@ -7,7 +7,7 @@
 #include "input.hpp"
 #include "cmn_data.hpp"
 #include "world.hpp"
-#include "actor.hpp"
+#include "mon.hpp"
 
 #include <string.h>
 #include <stdlib.h>

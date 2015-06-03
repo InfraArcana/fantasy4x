@@ -1,7 +1,5 @@
-#ifndef TRACE_H
-#define TRACE_H
-
-#include "target_mode.hpp"
+#ifndef TRACE_HPP
+#define TRACE_HPP
 
 #include <assert.h>
 #include <iostream>
@@ -51,4 +49,4 @@
 
 #endif // NDEBUG
 
-#endif // TRACE_H
+#endif // TRACE_HPP

@@ -1,5 +1,5 @@
-#ifndef CMN_DATA_H
-#define CMN_DATA_H
+#ifndef CMN_DATA_HPP
+#define CMN_DATA_HPP
 
 #include "base.hpp"
 
@@ -31,4 +31,4 @@ extern const std::string    font_img_path;
 extern const bool           IS_FULLSCREEN;
 //-----------------------------------------------------------------------------
 
-#endif // CMN_DATA_H
+#endif // CMN_DATA_HPP

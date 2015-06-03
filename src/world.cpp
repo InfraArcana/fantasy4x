@@ -2,34 +2,36 @@
 
 #include <vector>
 
-#include "actor.hpp"
+#include "mon.hpp"
 
 namespace world
 {
 
-namespace
-{
-
-Map_Cell            cells_[MAP_W][MAP_H];
-std::vector<Actor>  actors_;
-
-} // namespace
+Map_Ent_Ptr                 terrain[MAP_W][MAP_H];
+std::vector<Map_Ent_Ptr>    mobs;
 
 void init()
 {
     TRACE_FUNC_BEGIN;
 
+    cleanup();
+
     for (int x = 0; x < MAP_W; ++x)
     {
         for (int y = 0; y < MAP_H; ++y)
         {
-            Map_Cell& cell  = cells_[x][y];
+            Pos p(x, y);
+            Char_And_Clr render_data('.', clr_green);
 
-            cell.p          = {x, y};
-            cell.ch         = '.';
-            cell.clr        = clr_green_lgt;
+            terrain[x][y] = Map_Ent_Ptr(new Map_Ent(p, render_data));
         }
     }
+
+    auto castle_ptr = Map_Ent_Ptr(new Castle(Pos(1, 1)));
+    terrain[1][1]   = std::move(castle_ptr);
+
+    auto army_ptr   = Map_Ent_Ptr(new Army(Pos(5, 3)));
+    mobs.push_back(std::move(army_ptr));
 
     TRACE_FUNC_END;
 }
@@ -38,16 +40,9 @@ void cleanup()
 {
     TRACE_FUNC_BEGIN;
 
-    actors_.resize(0);
+    mobs.resize(0);
 
     TRACE_FUNC_END;
-}
-
-Char_And_Clr get_map_cell_render_data(const Pos& p)
-{
-    Map_Cell& cell  = cells_[p.x][p.y];
-
-    return Char_And_Clr(cell.ch, cell.clr, clr_black);
 }
 
 } // world

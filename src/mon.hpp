@@ -1,12 +1,12 @@
-#ifndef ACTOR_H
-#define ACTOR_H
+#ifndef MON_HPP
+#define MON_HPP
 
 #include <string>
 
-class Race_Data_T
+class Race_Def
 {
 public:
-    Race_Data_T() :
+    Race_Def() :
         name        (),
         name_plural (),
         name_a      () {}
@@ -16,19 +16,19 @@ public:
     std::string name_a;
 };
 
-class Actor
+class Mon
 {
 public:
-    Actor(const Race_Data_T* race_d, const std::string& name);
+    Mon(const Race_Def* race_d, const std::string& name);
 
-    Actor(const Actor&);
+    Mon(const Mon&);
 
-    Actor();
+    Mon();
 
-    Actor& operator=(const Actor&);
+    Mon& operator=(const Mon&);
 
 private:
-    const Race_Data_T* race_d_;
+    const Race_Def* race_d_;
     std::string name_;
 };
 
@@ -41,4 +41,4 @@ void cleanup();
 
 } // race_data
 
-#endif // ACTOR_H
+#endif // MON_HPP

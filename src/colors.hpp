@@ -1,42 +1,38 @@
-#ifndef COLORS_H
-#define COLORS_H
+#ifndef COLORS_HPP
+#define COLORS_HPP
 
 #include <SDL.h>
 
 typedef SDL_Color Clr;
 
-extern const Clr clr_black;
-extern const Clr clr_gray;
-extern const Clr clr_white;
-extern const Clr clr_white_high;
+const Clr clr_black         = {  0,   0,   0, SDL_ALPHA_OPAQUE};
+const Clr clr_gray          = {128, 128, 128, SDL_ALPHA_OPAQUE};
+const Clr clr_white         = {192, 192, 192, SDL_ALPHA_OPAQUE};
+const Clr clr_white_high    = {255, 255, 255, SDL_ALPHA_OPAQUE};
 
-extern const Clr clr_red;
-extern const Clr clr_red_lgt;
+const Clr clr_red           = {128,   0,   0, SDL_ALPHA_OPAQUE};
+const Clr clr_red_lgt       = {255,   0,   0, SDL_ALPHA_OPAQUE};
 
-extern const Clr clr_green;
-extern const Clr clr_green_lgt;
+const Clr clr_green         = {  0, 128,   0, SDL_ALPHA_OPAQUE};
+const Clr clr_green_lgt     = {  0, 255,   0, SDL_ALPHA_OPAQUE};
 
-extern const Clr clr_yellow;
+const Clr clr_yellow        = {255, 255,   0, SDL_ALPHA_OPAQUE};
 
-extern const Clr clr_blue;
-extern const Clr clr_blueLgt;
+const Clr clr_blue          = {  0,   0, 139, SDL_ALPHA_OPAQUE};
+const Clr clr_blue_lgt      = { 92,  92, 255, SDL_ALPHA_OPAQUE};
 
-extern const Clr clr_magenta;
-extern const Clr clr_magenta_lgt;
+const Clr clr_magenta       = {139,   0, 139, SDL_ALPHA_OPAQUE};
+const Clr clr_magenta_lgt   = {255,   0, 255, SDL_ALPHA_OPAQUE};
 
-extern const Clr clr_cyan;
-extern const Clr clr_cyanLgt;
+const Clr clr_cyan          = {  0, 128, 128, SDL_ALPHA_OPAQUE};
+const Clr clr_cyanLgt       = {  0, 255, 255, SDL_ALPHA_OPAQUE};
 
-extern const Clr clr_brown;
-extern const Clr clr_brown_drk;
-extern const Clr clr_brown_xdrk;
+const Clr clr_brown         = {153, 102,  61, SDL_ALPHA_OPAQUE};
+const Clr clr_brown_drk     = { 96,  64,  32, SDL_ALPHA_OPAQUE};
+const Clr clr_brown_xdrk    = { 48,  32,  16, SDL_ALPHA_OPAQUE};
 
-extern const Clr clr_violet;
+const Clr clr_violet        = {128,   0, 255, SDL_ALPHA_OPAQUE};
 
-extern const Clr clr_orange;
+const Clr clr_orange        = {255, 128,   0, SDL_ALPHA_OPAQUE};
 
-//extern const Clr clr_msg_good;
-//extern const Clr clr_msg_bad;
-//extern const Clr clr_msg_crit;
-
-#endif // COLORS_H
+#endif // COLORS_HPP
