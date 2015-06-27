@@ -13,4 +13,3 @@ CppCheckResults.xml
 *.depend
 cmd.exe
 desktop.ini
-Cargo.lock
