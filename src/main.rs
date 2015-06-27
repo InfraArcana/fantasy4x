@@ -1,29 +1,40 @@
 extern crate sdl2;
 
-mod render;
-mod input;
+use sdl2::pixels::Color;
+use sdl2::keycode::KeyCode;
 
 fn main()
 {
-    let mut sdl_ctx = sdl2::init().video().unwrap();
+    let mut sdl_context = sdl2::init().video().unwrap();
 
-    let     sdl_win = render::mk_window(&mut sdl_ctx);
-
-    let mut sdl_ren = sdl_win.renderer()
+    let window = sdl_context.window("fantasy4x", 800, 600)
+        .position_centered()
         .build()
         .unwrap();
 
-    let mut sdl_drawer = sdl_ren.drawer();
+    let mut renderer = window.renderer().build().unwrap();
 
-    render::process(&mut sdl_drawer);
+    let mut drawer = renderer.drawer();
 
-    let mut quit_game = false;
+    drawer.set_draw_color(Color::RGB(0, 0, 0));
+    drawer.clear();
+    drawer.present();
 
-    while !quit_game
-    {
-        input::read(&mut sdl_ctx, &mut quit_game);
+    let mut running = true;
 
-        // TODO: The rest of the game loop goes here...
+    while running {
+        for event in sdl_context.event_pump().poll_iter() {
+            use sdl2::event::Event;
+            
+            match event {
+                Event::Quit {..} | Event::KeyDown { keycode: KeyCode::Escape, .. } => {
+                    running = false
+                },
+                _ => {}
+            }
+        }
+
+        // The rest of the game loop goes here...
 
     }
 
