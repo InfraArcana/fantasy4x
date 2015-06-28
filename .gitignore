@@ -13,3 +13,9 @@ CppCheckResults.xml
 *.depend
 cmd.exe
 desktop.ini
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+Makefile
+build/**

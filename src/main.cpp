@@ -1,3 +1,20 @@
+#include <ncurses.h>
+
+int main(int argc, char** argv)
+{
+    (void)argc;
+    (void)argv;
+
+    initscr();
+    printw("Hello world!");
+    refresh();
+    getch();
+    endwin();
+
+    return 0;
+}
+
+/*
 #include "base.hpp"
 
 #include <SDL.h>
@@ -15,7 +32,6 @@
 #ifdef _WIN32
 #undef main
 #endif
-
 
 int main(int argc, char* argv[])
 {
@@ -55,3 +71,4 @@ int main(int argc, char* argv[])
     TRACE_FUNC_END;
     return 0;
 }
+*/

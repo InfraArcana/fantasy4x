@@ -1,0 +1,90 @@
+#
+# When calling this makefile, the "BUILD" variable can be set to either
+# "release", or "debug", e.g.:
+#
+# > make BUILD=debug
+#
+# Running "make" alone will build in release mode
+#
+
+# Full path to Makefile directory
+MK_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+
+BUILD ?= debug
+CXX   ?= g++
+
+# Directiories
+SRC_DIR         := $(MK_DIR)/src
+INC_DIR         := $(MK_DIR)/include
+RES_DIR         := $(MK_DIR)/resources
+OBJ_BASE_DIR    := $(MK_DIR)/obj
+OBJ_DIR         := $(OBJ_BASE_DIR)/$(BUILD)
+TARGET_BASE_DIR := $(MK_DIR)/target
+TARGET_DIR      := $(TARGET_BASE_DIR)/$(BUILD)
+
+# Includes
+INCLUDES := -I$(INC_DIR)
+
+#Flags
+ifeq ($(BUILD), debug)
+	CXXFLAGS := -O0 -g
+else
+	CXXFLAGS := -O2
+endif
+
+CXXFLAGS := \
+	-std=c++11 \
+	-Wall \
+	-Wextra \
+	-fno-rtti \
+	-fno-exceptions \
+	$(CXXFLAGS)
+
+# For building 32-bit binaries on x86_64 platform
+# CXXFLAGS+=-m32 -march=i686
+
+LDFLAGS := -lncurses
+
+# Output and sources
+EXECUTABLE := $(TARGET_DIR)/fantasy4x
+SOURCES    := $(wildcard $(SRC_DIR)/*.cpp)
+OBJECTS    := $(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
+DEPENDS    := $(SOURCES:.cpp=.d)
+
+# Various bash commands
+RM    := rm -rf
+MV    := mv -f
+MKDIR := mkdir -p
+CP    := cp -r
+CAT   := cat
+
+# Make targets
+all : $(EXECUTABLE)
+	$(CP) $(RES_DIR)/* $(TARGET_DIR)
+
+$(EXECUTABLE) : $(OBJECTS)
+	$(MKDIR) $(TARGET_DIR)
+	$(CXX) $^ -o $@ $(LDFLAGS)
+
+$(OBJ_DIR)/%.o : $(SRC_DIR)/%.cpp
+	$(MKDIR) $(OBJ_DIR)
+	$(CXX) -c $(CXXFLAGS) $(INCLUDES) $< -o $@
+
+# Optional auto dependency tracking
+-include depends.mk
+
+depends : $(DEPENDS)
+
+%.d :
+	$(CXX) -MM $(CXXFLAGS) $(INCLUDES) $(@:.d=.cpp) -MF depends.tmp -MT$(@:.d=.o)
+	$(CAT) depends.tmp >> depends.mk
+	$(RM) depends.tmp
+
+clean-depends :
+	$(RM) depends.mk
+
+# Remove object files
+clean :
+	$(RM) $(TARGET_BASE_DIR) $(OBJ_BASE_DIR)
+
+.PHONY : all depends clean clean-depends
