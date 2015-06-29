@@ -3,14 +3,14 @@
 # ------------------------------------------------------------------------------
 # Splitting strings with backslashes is only supported in 3.x.x
 # (There may be other dependencies too...)
-CMAKE_MINIMUM_REQUIRED (VERSION 3.2.3)
+cmake_minimum_required (VERSION 3.2.3)
 
 # Require generating build files in a "build" directory (out of source builds)
 if (NOT (${CMAKE_BINARY_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/build))
-  MESSAGE (STATUS "CMAKE_BINARY_DIR         : ${CMAKE_BINARY_DIR}")
-  MESSAGE (STATUS "CMAKE_CURRENT_SOURCE_DIR : ${CMAKE_CURRENT_SOURCE_DIR}")
+  message (STATUS "CMAKE_BINARY_DIR         : ${CMAKE_BINARY_DIR}")
+  message (STATUS "CMAKE_CURRENT_SOURCE_DIR : ${CMAKE_CURRENT_SOURCE_DIR}")
 
-  MESSAGE (FATAL_ERROR
+  message (FATAL_ERROR
     " \
     \n Must run cmake from \"build\" directory! \
     \n \
@@ -19,24 +19,26 @@ if (NOT (${CMAKE_BINARY_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR}/build))
     \n \
     \n (note the trailing \"..\") \
     \n \
-    \n You should probably also delete CMakeCache.txt before trying again. \
+    \n You should probably delete CMakeCache.txt etc before trying again. \
     ")
 endif ()
 
 # ------------------------------------------------------------------------------
 # Project
 # ------------------------------------------------------------------------------
-PROJECT (fantasy4x)
+project (fantasy4x)
 
-SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/target)
+set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/target)
 
 # ------------------------------------------------------------------------------
 # Compiler flags
 # ------------------------------------------------------------------------------
-SET (CMAKE_CXX_FLAGS
+# Using c++14 standard
+set(CMAKE_CXX_STANDARD 14)
+
+set (CMAKE_CXX_FLAGS
   " \
   ${CMAKE_CXX_FLAGS} \
-  -std=c++11 \
   -Wall \
   -Wextra \
   -pedantic \
@@ -45,29 +47,29 @@ SET (CMAKE_CXX_FLAGS
   ")
 
 # ------------------------------------------------------------------------------
-# Source files (.cpp)
+# Source files (*.cpp and *.hpp)
 # ------------------------------------------------------------------------------
 # Load external source file list
-FILE (READ ${CMAKE_CURRENT_SOURCE_DIR}/source.txt SRC_FILES)
-STRING (REPLACE "\n" ";" SRC_FILES ${SRC_FILES})
+file (READ ${CMAKE_CURRENT_SOURCE_DIR}/source.txt SRC_FILES)
+string (REPLACE "\n" ";" SRC_FILES ${SRC_FILES})
 
 # ------------------------------------------------------------------------------
 # Executable
 # ------------------------------------------------------------------------------
-ADD_EXECUTABLE (${PROJECT_NAME} ${SRC_FILES})
+add_executable (${PROJECT_NAME} ${SRC_FILES})
 
 # ------------------------------------------------------------------------------
 # Libraries
 # ------------------------------------------------------------------------------
 # Find ncurses lib
-SET (CURSES_NEED_NCURSES TRUE)
-FIND_PACKAGE (Curses REQUIRED)
+set (CURSES_NEED_NCURSES TRUE)
+find_package (Curses REQUIRED)
 
-SET (LIBS ${LIBS} ${CURSES_LIBRARIES})
+set (LIBS ${LIBS} ${CURSES_LIBRARIES})
 
-TARGET_LINK_LIBRARIES (${PROJECT_NAME} ${LIBS})
+target_link_libraries (${PROJECT_NAME} ${LIBS})
 
 # ------------------------------------------------------------------------------
 # Include directories
 # ------------------------------------------------------------------------------
-INCLUDE_DIRECTORIES (${CMAKE_CURRENT_SOURCE_DIR}/include ${CURSES_INCLUDE_DIRS})
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/include ${CURSES_INCLUDE_DIRS})
