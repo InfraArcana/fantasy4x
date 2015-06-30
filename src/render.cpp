@@ -1,6 +1,6 @@
 #include "render.hpp"
 
-#include <SDL_image.h>
+//#include <SDL_image.h>
 
 #include "base.hpp"
 #include "cmn_data.hpp"
@@ -13,8 +13,9 @@ namespace render
 namespace
 {
 
-SDL_Window*     sdl_window_     = nullptr;
-SDL_Renderer*   sdl_renderer_   = nullptr;
+//SDL_Window*     sdl_window_     = nullptr;
+//SDL_Renderer*   sdl_renderer_   = nullptr;
+bool            is_inited_      = false;
 Pos             viewport_       = {0, 0};
 bool            font_px_data_[256][128];
 
@@ -22,14 +23,17 @@ const int NR_FONT_IMAGE_GLYPHS_X = 32;
 
 bool is_inited()
 {
-    return sdl_window_ != nullptr;
+    return is_inited_;
 }
 
 void set_render_clr(const Clr& clr)
 {
+    /*
     SDL_SetRenderDrawColor(sdl_renderer_, clr.r, clr.g, clr.b, SDL_ALPHA_OPAQUE);
+    */
 }
 
+/*
 Uint32 get_px(const SDL_Surface& surface, int px_x, int px_y)
 {
     int bpp = surface.format->BytesPerPixel;
@@ -56,7 +60,9 @@ Uint32 get_px(const SDL_Surface& surface, int px_x, int px_y)
     }
     return -1;
 }
+*/
 
+/*
 void load_font_data()
 {
     TRACE_FUNC_BEGIN;
@@ -79,6 +85,7 @@ void load_font_data()
 
     TRACE_FUNC_END;
 }
+*/
 
 void get_char_sheet_pos(char ch, Pos& dst)
 {
@@ -87,6 +94,7 @@ void get_char_sheet_pos(char ch, Pos& dst)
     dst = {X, Y};
 }
 
+/*
 void put_pxs_for_char(char ch, const Pos& px_p, const Clr& clr)
 {
     Pos sheet_p;
@@ -120,9 +128,11 @@ void put_pxs_for_char(char ch, const Pos& px_p, const Clr& clr)
         }
     }
 }
+*/
 
 void draw_rect_px(const Rect& px_r, const Clr& clr)
 {
+    /*
     if (is_inited())
     {
         SDL_Rect sdl_rect =
@@ -138,10 +148,12 @@ void draw_rect_px(const Rect& px_r, const Clr& clr)
 
         SDL_RenderFillRect(sdl_renderer_, &sdl_rect);
     }
+    */
 }
 
 void draw_rect(const Rect& r, const Clr& clr)
 {
+    /*
     const Rect px_r(
         r.p0.x * CELL_PX_W,
         r.p0.y * CELL_PX_H,
@@ -150,26 +162,33 @@ void draw_rect(const Rect& r, const Clr& clr)
     );
 
     draw_rect_px(px_r, clr);
+    */
 }
 
 void get_window_px_size(Pos& dst)
 {
+    /*
     SDL_GetWindowSize(sdl_window_, &dst.x, &dst.y);
+    */
 }
 
 void draw_char_at_px(char ch, const Pos& px_p, const Clr& clr, const Clr& bg_clr)
 {
+    /*
     const Rect bg_px_r( px_p, {px_p.x + CELL_PX_W - 1, px_p.y + CELL_PX_H - 1} );
     draw_rect_px(bg_px_r, bg_clr);
 
     put_pxs_for_char(ch, px_p, clr);
+    */
 }
 
 void draw_char_at(char ch, const Pos& p, const Clr& clr, const Clr& bg_clr = clr_black)
 {
+    /*
     const Pos px_p = {p.x * CELL_PX_W, p.y * CELL_PX_H};
 
     draw_char_at_px(ch, px_p, clr, bg_clr);
+    */
 }
 
 //void draw_char_in_map(char ch, const P* p, const Clr* clr, const Clr* bg_clr) {
@@ -194,6 +213,7 @@ void init()
 
     cleanup();
 
+    /*
     TRACE << "Setting up rendering window" << std::endl;
 
     sdl_window_ = SDL_CreateWindow(
@@ -206,6 +226,7 @@ void init()
     sdl_renderer_ = SDL_CreateRenderer(sdl_window_, -1, SDL_RENDERER_ACCELERATED);
 
     load_font_data();
+    */
 
     TRACE_FUNC_END;
 }
@@ -214,6 +235,7 @@ void cleanup()
 {
     TRACE_FUNC_BEGIN;
 
+    /*
     if (sdl_renderer_)
     {
         SDL_DestroyRenderer(sdl_renderer_);
@@ -225,6 +247,7 @@ void cleanup()
         SDL_DestroyWindow(sdl_window_);
         sdl_window_ = nullptr;
     }
+    */
 
     TRACE_FUNC_END;
 }
@@ -233,7 +256,7 @@ void render_present()
 {
     if (is_inited())
     {
-        SDL_RenderPresent(sdl_renderer_);
+        // SDL_RenderPresent(sdl_renderer_);
     }
 }
 
@@ -241,31 +264,38 @@ void clear_scr()
 {
     if (is_inited())
     {
+        /*
         set_render_clr(clr_black);
         SDL_RenderClear(sdl_renderer_);
+        */
     }
 }
 
 void on_window_resized()
 {
-    if (is_inited())
+    if (!is_inited())
     {
-        Uint32 sdl_window_flags = SDL_GetWindowFlags(sdl_window_);
-        if (
-            !(sdl_window_flags & SDL_WINDOW_MAXIMIZED)   &&
-            !(sdl_window_flags & SDL_WINDOW_FULLSCREEN)  &&
-            !(sdl_window_flags & SDL_WINDOW_FULLSCREEN_DESKTOP))
-        {
-            Pos px_size;
-            get_window_px_size(px_size);
-            px_size.x = (px_size.x / CELL_PX_W) * CELL_PX_W;
-            px_size.y = (px_size.y / CELL_PX_H) * CELL_PX_H;
-            SDL_SetWindowSize(sdl_window_, px_size.x, px_size.y);
-        }
+        return;
     }
+
+    /*
+    Uint32 sdl_window_flags = SDL_GetWindowFlags(sdl_window_);
+    if (
+        !(sdl_window_flags & SDL_WINDOW_MAXIMIZED)   &&
+        !(sdl_window_flags & SDL_WINDOW_FULLSCREEN)  &&
+            !(sdl_window_flags & SDL_WINDOW_FULLSCREEN_DESKTOP))
+    {
+        Pos px_size;
+        get_window_px_size(px_size);
+        px_size.x = (px_size.x / CELL_PX_W) * CELL_PX_W;
+        px_size.y = (px_size.y / CELL_PX_H) * CELL_PX_H;
+        SDL_SetWindowSize(sdl_window_, px_size.x, px_size.y);
+    }
+    
     clear_scr();
     draw_normal_mode();
     render_present();
+    */  
 }
 
 void draw_text(const std::string& text, const Pos& p, const Clr& clr, const Clr& bg_clr)
@@ -275,6 +305,7 @@ void draw_text(const std::string& text, const Pos& p, const Clr& clr, const Clr&
         return;
     }
 
+    /*
     if (p.y >= 0 && p.y < SCR_H)
     {
         Pos px_p = p * Pos(CELL_PX_W, CELL_PX_H);
@@ -300,10 +331,12 @@ void draw_text(const std::string& text, const Pos& p, const Clr& clr, const Clr&
             }
         }
     }
+    */
 }
 
 void draw_normal_mode()
 {
+    /*
     Pos window_px_size;
     get_window_px_size(window_px_size);
 
@@ -340,6 +373,7 @@ void draw_normal_mode()
 
         draw_char_at(render_data.ch, p, render_data.clr);
     }
+    */
 }
 
 } // render

@@ -1,7 +1,7 @@
 #ifndef API_HPP
 #define API_HPP
 
-#include <SDL.h>
+//#include <SDL.h>
 
 namespace api
 {
@@ -10,7 +10,7 @@ void init();
 
 void cleanup();
 
-void sleep(Uint32 duration);
+//void sleep(Uint32 duration);
 
 } // api
 

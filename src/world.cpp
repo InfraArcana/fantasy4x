@@ -7,8 +7,8 @@
 namespace world
 {
 
-Map_Ent_Ptr                 terrain[MAP_W][MAP_H];
-std::vector<Map_Ent_Ptr>    mobs;
+Map_Ent_Ptr               terrain[MAP_W][MAP_H];
+std::vector<Map_Ent_Ptr>  mobs;
 
 void init()
 {

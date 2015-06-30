@@ -1,10 +1,10 @@
 Fantasy 4x
 ============
 # Building from a fresh clone
-**Run:**
-`> cmake -P init_build_system.cmake`
-(E.g. in the Windows command line or a Unix shell.)
+1. Create a folder called "build" in the root of the project directory
+2. Go to the build folder (e.g. in the Windows command line or a Unix shell), and run either
+  * `cmake ..` for the default generator on your platform (e.g. Unix Makefiles), OR
+  * `cmake .. -G \"<generator-name>\"` for a specific generator (see the cmake documentation)
+3. Build the project using the generated Makefile/Visual Studio project/whatever
 
-This is typically only needed once.
-
-From then on use the Makefile/Visual Studio project/whatever in the **"build"** directory.
+Steps 1 and 2 are typically only ever needed once.

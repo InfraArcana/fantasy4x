@@ -2,7 +2,7 @@
 
 #include "base.hpp"
 
-#include <SDL_image.h>
+//#include <SDL_image.h>
 
 namespace api
 {
@@ -18,6 +18,7 @@ void init()
 {
     TRACE_FUNC_BEGIN;
 
+    /*
     inited_ = true;
 
     if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
@@ -33,6 +34,7 @@ void init()
               << IMG_GetError() << std::endl;
         assert(false);
     }
+    */
 
     TRACE_FUNC_END;
 }
@@ -40,12 +42,15 @@ void init()
 void cleanup()
 {
     TRACE_FUNC_BEGIN;
-    inited_ = false;
-    IMG_Quit();
+    inited_ = false; 
+   /*
+     IMG_Quit();
     SDL_Quit();
+    */
     TRACE_FUNC_END;
 }
 
+/*
 void sleep(Uint32 duration)
 {
     if (inited_)
@@ -65,5 +70,6 @@ void sleep(Uint32 duration)
         }
     }
 }
+*/
 
 } // api

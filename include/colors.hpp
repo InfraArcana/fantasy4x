@@ -1,8 +1,14 @@
 #ifndef COLORS_HPP
 #define COLORS_HPP
 
-#include <SDL.h>
+typedef int Clr; //TODO: Temporary
 
+const Clr clr_black   = 0;
+const Clr clr_white   = 0;
+const Clr clr_red_lgt = 0;
+const Clr clr_green   = 0;
+
+/*
 typedef SDL_Color Clr;
 
 const Clr clr_black         = {  0,   0,   0, SDL_ALPHA_OPAQUE};
@@ -34,5 +40,6 @@ const Clr clr_brown_xdrk    = { 48,  32,  16, SDL_ALPHA_OPAQUE};
 const Clr clr_violet        = {128,   0, 255, SDL_ALPHA_OPAQUE};
 
 const Clr clr_orange        = {255, 128,   0, SDL_ALPHA_OPAQUE};
+*/
 
 #endif // COLORS_HPP

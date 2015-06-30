@@ -1,6 +1,6 @@
 #include "input.hpp"
 
-#include <SDL.h>
+//#include <SDL.h>
 
 #include "render.hpp"
 #include "api.hpp"
@@ -12,8 +12,9 @@ namespace
 {
 
 bool      inited_ = false;
-SDL_Event sdl_event_;
+//SDL_Event sdl_event_;
 
+/*
 void key_pressed(SDL_Keycode sdl_keycode, bool* quit_game)
 {
     switch (sdl_keycode)
@@ -23,6 +24,7 @@ void key_pressed(SDL_Keycode sdl_keycode, bool* quit_game)
     default: break;
     }
 }
+*/
 
 } // namespace
 
@@ -33,6 +35,7 @@ void init()
     TRACE_FUNC_END;
 }
 
+/*
 void get_cmd(bool* quit_game)
 {
     if (inited_)
@@ -72,5 +75,6 @@ void get_cmd(bool* quit_game)
         }
     }
 }
+*/
 
 } // input
