@@ -1,7 +1,7 @@
 #ifndef INPUT_HPP
 #define INPUT_HPP
 
-#include "base.hpp"
+#include "lib_wrap.hpp"
 
 namespace input
 {

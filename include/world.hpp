@@ -42,13 +42,13 @@ class Army : public Map_Ent
 {
 public:
     Army(const Pos& p) :
-        Map_Ent(p, Char_And_Clr('H', clr_red_lgt)) {}
+        Map_Ent(p, Char_And_Clr('H', clr_red)) {}
 };
 
 namespace world
 {
 
-extern Map_Ent_Ptr              terrain[MAP_W][MAP_H];
+extern Map_Ent_Ptr              terrain[map_w][map_h];
 extern std::vector<Map_Ent_Ptr> mobs;
 
 void init();

@@ -11,20 +11,20 @@ Text_Lines split_str(std::string str, const std::string& delim)
 
     while (true)
     {
-        const size_t IDX = str.find(delim);
+        const size_t idx = str.find(delim);
 
-        if (IDX == std::string::npos)
+        if (idx == std::string::npos)
         {
             // Add the remaining string
             ret.push_back(str);
             break;
         }
 
-        const std::string token = str.substr(0, IDX);
+        const std::string token = str.substr(0, idx);
 
         ret.push_back(token);
 
-        str.erase(0, IDX + delim.length());
+        str.erase(0, idx + delim.length());
     }
 
     return ret;

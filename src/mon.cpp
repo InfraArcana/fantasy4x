@@ -4,7 +4,7 @@
 #include <string>
 #include <map>
 
-#include "base.hpp"
+#include "lib_wrap.hpp"
 #include "utils.hpp"
 #include "file_io.hpp"
 

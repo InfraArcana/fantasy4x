@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "lib_wrap.hpp"
 #include "cmn_data.hpp"
-#include "colors.hpp"
 
 //-----------------------------------------------------------------------------
 // Text
@@ -41,9 +41,9 @@ Text_Lines split_str(std::string str, const std::string& delim);
 struct Pos
 {
     Pos()                           : x(0), y(0) {}
-    Pos(const int X, const int Y)   : x(X), y(Y) {}
+    Pos(const int x, const int y)   : x(x), y(y) {}
     Pos(const Pos& p)               : x(p.x), y(p.y) {}
-    Pos(const int V)                : x(V), y(V) {}
+    Pos(const int v)                : x(v), y(v) {}
 
     Pos& operator=(const Pos& p)
     {
@@ -52,31 +52,31 @@ struct Pos
         return *this;
     }
 
-    Pos& operator*=(const int  V)   {x *= V;   y *= V;      return *this;}
+    Pos& operator*=(const int  v)   {x *= v;   y *= v;      return *this;}
     Pos& operator*=(const Pos& p)   {x *= p.x; y *= p.y;    return *this;}
-    Pos& operator/=(const int  V)   {x /= V;   y /= V;      return *this;}
+    Pos& operator/=(const int  v)   {x /= v;   y /= v;      return *this;}
     Pos& operator/=(const Pos& p)   {x /= p.x; y /= p.y;    return *this;}
     Pos& operator+=(const Pos& p)   {x += p.x; y += p.y;    return *this;}
     Pos& operator-=(const Pos& p)   {x -= p.x; y -= p.y;    return *this;}
     Pos operator+(const Pos& p)     const {return Pos(x + p.x,  y + p.y);}
-    Pos operator+(const int V)      const {return Pos(x + V,    y + V);}
+    Pos operator+(const int v)      const {return Pos(x + v,    y + v);}
     Pos operator-(const Pos& p)     const {return Pos(x - p.x,  y - p.y);}
-    Pos operator-(const int V)      const {return Pos(x - V,    y - V);}
-    Pos operator/(const int V)      const {return Pos(x / V,    y / V);}
+    Pos operator-(const int v)      const {return Pos(x - v,    y - v);}
+    Pos operator/(const int v)      const {return Pos(x / v,    y / v);}
     Pos operator/(const Pos& p)     const {return Pos(x / p.x,  y / p.y);}
-    Pos operator*(const int V)      const {return Pos(x * V,    y * V);}
+    Pos operator*(const int v)      const {return Pos(x * v,    y * v);}
     Pos operator*(const Pos& p)     const {return Pos(x * p.x,  y * p.y);}
     bool operator==(const Pos& p)   const {return x == p.x  && y == p.y;}
     bool operator!=(const Pos& p)   const {return x != p.x  || y != p.y;}
-    bool operator!=(const int V)    const {return x != V    || y != V;}
+    bool operator!=(const int v)    const {return x != v    || y != v;}
     bool operator>(const Pos& p)    const {return x > p.x   && y > p.y;}
-    bool operator>(const int  V)    const {return x > V     && y > V;}
+    bool operator>(const int  v)    const {return x > v     && y > v;}
     bool operator<(const Pos& p)    const {return x < p.x   && y < p.y;}
-    bool operator<(const int  V)    const {return x < V     && y < V;}
+    bool operator<(const int  v)    const {return x < v     && y < v;}
     bool operator>=(const Pos&  p)  const {return x >= p.x  && y >= p.y;}
-    bool operator>=(const int   V)  const {return x >= V    && y >= V;}
+    bool operator>=(const int   v)  const {return x >= v    && y >= v;}
     bool operator<=(const Pos&  p)  const {return x <= p.x  && y <= p.y;}
-    bool operator<=(const int   V)  const {return x <= V    && y <= V;}
+    bool operator<=(const int   v)  const {return x <= v    && y <= v;}
 
     Pos get_signs() const
     {
@@ -85,8 +85,11 @@ struct Pos
     }
 
     Pos get_pos_with_offset(const Pos& d)       const {return Pos(x + d.x, y + d.y);}
-    Pos get_pos_with_x_offset(const int DX)     const {return Pos(x + DX, y);}
-    Pos get_pos_with_y_offset(const int DY)     const {return Pos(x, y + DY);}
+    Pos get_pos_with_x_offset(const int dx)     const {return Pos(x + dx, y);}
+    Pos get_pos_with_y_offset(const int dy)     const {return Pos(x, y + dy);}
+
+    void set(const Pos& other)                  {x = other.x;   y = other.y;}
+    void set(const int new_x, const int new_y)  {x = new_x;     y = new_y;}
 
     void swap(Pos& p)
     {
@@ -105,8 +108,8 @@ struct Rect
 
     Rect(const Pos& p0_, const Pos& p1_) :  p0(p0_), p1(p1_) {}
 
-    Rect(const int X0, const int Y0, const int X1, const int Y1) :
-        p0(Pos(X0, Y0)), p1(Pos(X1, Y1)) {}
+    Rect(const int x0, const int y0, const int x1, const int y1) :
+        p0(Pos(x0, y0)), p1(Pos(x1, y1)) {}
 
     Rect(const Rect& r) : p0(r.p0), p1(r.p1) {}
 

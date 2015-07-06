@@ -3,7 +3,6 @@
 //#include <SDL.h>
 
 #include "render.hpp"
-#include "api.hpp"
 
 namespace input
 {

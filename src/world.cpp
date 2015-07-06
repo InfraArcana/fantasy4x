@@ -7,7 +7,7 @@
 namespace world
 {
 
-Map_Ent_Ptr               terrain[MAP_W][MAP_H];
+Map_Ent_Ptr               terrain[map_w][map_h];
 std::vector<Map_Ent_Ptr>  mobs;
 
 void init()
@@ -16,9 +16,9 @@ void init()
 
     cleanup();
 
-    for (int x = 0; x < MAP_W; ++x)
+    for (int x = 0; x < map_w; ++x)
     {
-        for (int y = 0; y < MAP_H; ++y)
+        for (int y = 0; y < map_h; ++y)
         {
             Pos p(x, y);
             Char_And_Clr render_data('.', clr_green);

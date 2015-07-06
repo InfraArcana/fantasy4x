@@ -2,7 +2,7 @@
 
 #include <fstream>
 
-#include "base.hpp"
+#include "lib_wrap.hpp"
 #include "utils.hpp"
 
 namespace file_io

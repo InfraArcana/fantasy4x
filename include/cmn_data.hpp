@@ -1,34 +1,25 @@
 #ifndef CMN_DATA_HPP
 #define CMN_DATA_HPP
 
-#include "base.hpp"
+#include "lib_wrap.hpp"
 
 #include <string>
 
-#define GAME_VERSION_LABEL "v0.01"
+//TODO: A lot of this stuff should not be hard coded
 
-extern const int SCR_BPP;
+const std::string   game_name           = "Fantasy4x";
+const std::string   game_version_str    = "v0.01";
 
-#define MAP_W       250
-#define MAP_H       250
-#define MAP_MID_X   MAP_W / 2
-#define MAP_MID_Y   MAP_H / 2
+const int           map_w               = 250;
+const int           map_h               = 250;
+const int           map_mid_x           = map_w / 2;
+const int           map_mid_y           = map_h / 2;
 
-#define SCR_W       80
-#define SCR_H       24
-#define SCR_MID_X   SCR_W / 2
-#define SCR_MID_Y   SCR_H / 2
+const int           scr_w               = 80;
+const int           scr_h               = 25;
+const int           scr_mid_x           = scr_w / 2;
+const int           scr_mid_y           = scr_h / 2;
 
-#define STR_BUFFER_SIZE SCR_W
-
-//-----------------------------------------------------------------------------
-//TODO: Move to Config
-#define CELL_PX_W   8
-#define CELL_PX_H   16
-#define SCR_PX_W    SCR_W * CELL_PX_W
-#define SCR_PX_H    SCR_H * CELL_PX_H
-extern const std::string    font_img_path;
-extern const bool           IS_FULLSCREEN;
-//-----------------------------------------------------------------------------
+const bool          is_fullscreen       = false;
 
 #endif // CMN_DATA_HPP

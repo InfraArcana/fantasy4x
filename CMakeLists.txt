@@ -39,6 +39,7 @@ endif ()
 # Using c++14 standard
 set(CMAKE_CXX_STANDARD 14)
 
+# TODO "CONSOLE_MODE" should not be hard coded here, it should depend on target
 set (CMAKE_CXX_FLAGS
   "${CMAKE_CXX_FLAGS} \
   -Wall \
@@ -46,6 +47,7 @@ set (CMAKE_CXX_FLAGS
   -pedantic \
   -fno-rtti \
   -fno-exceptions \
+  -DCONSOLE_MODE \
   ")
 
 # ------------------------------------------------------------------------------

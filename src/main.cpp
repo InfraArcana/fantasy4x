@@ -1,25 +1,26 @@
-#include <curses.h>
 
+/*
 int main(int argc, char** argv)
 {
     (void)argc;
     (void)argv;
 
-    initscr();
-    printw("Hello world!");
-    refresh();
-    getch();
-    endwin();
+    lib_wrap::init();
+
+    lib_wrap::draw_text("Testing", {20, 3}, clr_black, clr_white);
+
+    lib_wrap::update_scr();
+
+    lib_wrap::get_key();
+
+    lib_wrap::cleanup();
 
     return 0;
 }
+*/
 
-/*
-#include "base.hpp"
-
-#include <SDL.h>
-
-#include "api.hpp"
+#include "lib_wrap.hpp"
+#include "utils.hpp"
 #include "render.hpp"
 #include "input.hpp"
 #include "cmn_data.hpp"
@@ -40,35 +41,37 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
-    api::init();
+    lib_wrap::init();
     render::init();
-    input::init();
+    //input::init();
     race_data::init();
     world::init();
 
     bool quit_game = false;
 
-    render::clear_scr();
-
     while (!quit_game)
     {
-        render::clear_scr();
+        lib_wrap::clear_scr();
 
         render::draw_normal_mode();
 
-        //draw_text_xy(str, 10, 5, &clr_white, nullptr);
+        lib_wrap::update_scr();
 
-        render::render_present();
+        const auto key = lib_wrap::get_key();
 
-        input::get_cmd(&quit_game);
+        if (key == 'q') // NOTE: Temporary solution to quit the game nicely
+        {
+            quit_game = true;
+        }
+
+        //input::get_cmd(&quit_game);
     }
 
     world::cleanup();
     race_data::cleanup();
     render::cleanup();
-    api::cleanup();
+    lib_wrap::cleanup();
 
     TRACE_FUNC_END;
     return 0;
 }
-*/
