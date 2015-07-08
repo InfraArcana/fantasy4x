@@ -8,24 +8,29 @@
 class Map_Ent
 {
 public:
-    Map_Ent(const Pos& p, const Char_And_Clr& render_data) :
+    Map_Ent(const P& p, const Char_And_Clr& render_data) :
         p_              (p),
         render_data_    (render_data) {}
 
     virtual ~Map_Ent() {}
 
-    const Pos& get_pos()
+    const P& pos()
     {
         return p_;
     }
 
-    const Char_And_Clr& get_render_data() const
+    void set_pos(const P& p)
+    {
+        p_ = p;
+    }
+
+    const Char_And_Clr& render_data() const
     {
         return render_data_;
     }
 
 protected:
-    Pos p_;
+    P p_;
     Char_And_Clr render_data_;
 };
 
@@ -34,14 +39,14 @@ typedef std::unique_ptr<Map_Ent> Map_Ent_Ptr;
 class Castle : public Map_Ent
 {
 public:
-    Castle(const Pos& p) :
+    Castle(const P& p) :
         Map_Ent(p, Char_And_Clr('O', clr_white)) {}
 };
 
 class Army : public Map_Ent
 {
 public:
-    Army(const Pos& p) :
+    Army(const P& p) :
         Map_Ent(p, Char_And_Clr('H', clr_red)) {}
 };
 
@@ -54,6 +59,8 @@ extern std::vector<Map_Ent_Ptr> mobs;
 void init();
 
 void cleanup();
+
+void process();
 
 } // world
 

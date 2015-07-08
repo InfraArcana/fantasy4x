@@ -38,8 +38,8 @@ endif ()
 # ------------------------------------------------------------------------------
 # Using c++14 standard
 set(CMAKE_CXX_STANDARD 14)
+set(CXX_STANDARD_REQUIRED ON)
 
-# TODO "CONSOLE_MODE" should not be hard coded here, it should depend on target
 set (CMAKE_CXX_FLAGS
   "${CMAKE_CXX_FLAGS} \
   -Wall \
@@ -47,8 +47,13 @@ set (CMAKE_CXX_FLAGS
   -pedantic \
   -fno-rtti \
   -fno-exceptions \
-  -DCONSOLE_MODE \
   ")
+  
+if ("$ENV{fantasy4x_mode}" STREQUAL "console_mode")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DCONSOLE_MODE")
+else () # Not console mode
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DSDL_MODE")
+endif ()
 
 # ------------------------------------------------------------------------------
 # Source files (*.cpp and *.hpp)
@@ -67,30 +72,72 @@ add_executable (${PROJECT_NAME} ${SRC_FILES})
 # ------------------------------------------------------------------------------
 # Libraries
 # ------------------------------------------------------------------------------
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
 if (WIN32)
-	# Windows platform - use the pdcurses lib distributed with the project
-	set (PDCURSES_DIR ${PROJECT_SOURCE_DIR}/libs/pdcurses)
+	if ("$ENV{fantasy4x_mode}" STREQUAL "console_mode")
+		# Use the pdcurses lib distributed with the project
+		set (PDCURSES_DIR ${PROJECT_SOURCE_DIR}/libs/pdcurses)
 	
-	set (LIBS ${LIBS} ${PDCURSES_DIR}/pdcurses.lib)
+		set (LIBS ${LIBS} ${PDCURSES_DIR}/pdcurses.lib)
 	
-	include_directories (${PDCURSES_DIR}/include)
+		include_directories (${PDCURSES_DIR}/include)
 	
-	# Copy dll file to target directory
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${PDCURSES_DIR}/pdcurses.dll"
-			${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+		# Copy dll file(s) to target directory
+		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_directory
+				"${PDCURSES_DIR}/bin"
+				${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+				
+	else () # SDL mode
+	
+		# Use the SDL2 lib distributed with the project
+		
+		set (SDL2_DISTR_DIR
+			${PROJECT_SOURCE_DIR}/libs/SDL2-2.0.3-i686-w64-mingw32)
+		
+		set (CMAKE_PREFIX_PATH ${SDL2_DISTR_DIR})
+		
+		find_library (SDL2_LIBRARY       NAMES SDL2       REQUIRED)
+		find_library (SDL2main_LIBRARY   NAMES SDL2main   REQUIRED)
+		find_library (SDL2_image_LIBRARY NAMES SDL2_image REQUIRED)
+		
+		set (LIBS ${LIBS} ${SDL2_LIBRARY})
+		set (LIBS ${LIBS} ${SDL2main_LIBRARY})
+		set (LIBS ${LIBS} ${SDL2_image_LIBRARY})
+		
+		find_path (SDL2_INCLUDE_DIR       SDL.h)
+	
+		include_directories (${SDL2_INCLUDE_DIR})
+	
+		# Copy dll file(s) to target directory
+		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+			COMMAND ${CMAKE_COMMAND} -E copy_directory
+				"${SDL2_DISTR_DIR}/bin"
+				${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+	endif()
 
 else() # Not Windows platform
 	
-	# Find ncurses lib
-	set (CURSES_NEED_NCURSES TRUE)
-	
-	find_package (Curses REQUIRED)
+	if ("$ENV{fantasy4x_mode}" STREQUAL "console_mode")
+		# Find ncurses lib
+		set (CURSES_NEED_NCURSES TRUE)
+		
+		find_package (Curses REQUIRED)
 
-	set (LIBS ${LIBS} ${CURSES_LIBRARIES})
+		set (LIBS ${LIBS} ${CURSES_LIBRARIES})
+		
+		include_directories (${CURSES_INCLUDE_DIR})
+		
+	else () # Not console mode
 	
-	include_directories (${CURSES_INCLUDE_DIRS})
+		# Find SDL2 lib
+		find_package (SDL2 REQUIRED)
+
+		set (LIBS ${LIBS} ${SDL2_LIBRARIES})
+		
+		include_directories (${SDL2_INCLUDE_DIRS})
+	endif()
 endif()
 
 target_link_libraries (${PROJECT_NAME} ${LIBS})

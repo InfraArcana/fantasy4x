@@ -1,23 +1,5 @@
-
-/*
-int main(int argc, char** argv)
-{
-    (void)argc;
-    (void)argv;
-
-    lib_wrap::init();
-
-    lib_wrap::draw_text("Testing", {20, 3}, clr_black, clr_white);
-
-    lib_wrap::update_scr();
-
-    lib_wrap::get_key();
-
-    lib_wrap::cleanup();
-
-    return 0;
-}
-*/
+#include <string.h>
+#include <stdlib.h>
 
 #include "lib_wrap.hpp"
 #include "utils.hpp"
@@ -26,9 +8,6 @@ int main(int argc, char** argv)
 #include "cmn_data.hpp"
 #include "world.hpp"
 #include "mon.hpp"
-
-#include <string.h>
-#include <stdlib.h>
 
 #ifdef _WIN32
 #undef main
@@ -47,7 +26,8 @@ int main(int argc, char* argv[])
     race_data::init();
     world::init();
 
-    bool quit_game = false;
+    int     key         = 0;
+    bool    quit_game   = false;
 
     while (!quit_game)
     {
@@ -57,18 +37,21 @@ int main(int argc, char* argv[])
 
         lib_wrap::update_scr();
 
-        const auto key = lib_wrap::get_key();
-
         if (key == 'q') // NOTE: Temporary solution to quit the game nicely
         {
             quit_game = true;
         }
 
-        //input::get_cmd(&quit_game);
+        //input::cmd(&quit_game);
+
+        world::process();
+
+        lib_wrap::sleep(1);
     }
 
     world::cleanup();
     race_data::cleanup();
+    //input::cleanup();
     render::cleanup();
     lib_wrap::cleanup();
 

@@ -8,7 +8,7 @@ namespace input
 
 void init();
 
-//void get_cmd(bool* quit_game);
+//void cmd(bool* quit_game);
 
 } // input
 

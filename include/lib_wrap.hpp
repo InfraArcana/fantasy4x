@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <iostream>
 
-struct Pos;
+struct P;
 
 //-----------------------------------------------------------------------------
 // OPTIONS
@@ -77,6 +77,8 @@ const Clr clr_white     = COLOR_WHITE;
 
 #elif defined SDL_MODE
 
+#include <SDL.h>
+
 typedef SDL_Color Clr;
 
 const Clr clr_black         = {  0,   0,   0, SDL_ALPHA_OPAQUE};
@@ -125,21 +127,21 @@ void update_scr();
 
 void clear_scr();
 
-Pos get_scr_size();
+P scr_size();
 
 void draw_ch(const char ch,
-             const Pos& p,
+             const P& p,
              const Clr& clr,
              const Clr& clr_bg = clr_black);
 
 void draw_text(const std::string& str,
-               const Pos& p,
+               const P& p,
                const Clr& clr,
                const Clr& clr_bg = clr_black);
 
-void sleep(unsigned int ms);
+void sleep(const unsigned int ms);
 
-int get_key();
+int key();
 
 } // lib_wrap
 

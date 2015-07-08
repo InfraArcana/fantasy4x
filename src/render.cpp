@@ -11,7 +11,7 @@ namespace render
 namespace
 {
 
-Pos viewport_(0, 0);
+P viewport_(0, 0);
 
 } // namespace
 
@@ -34,11 +34,11 @@ void cleanup()
 }
 
 /*
-void draw_text(const std::string& text, const Pos& p, const Clr& clr, const Clr& bg_clr)
+void draw_text(const std::string& text, const P& p, const Clr& clr, const Clr& bg_clr)
 {
     if (p.y >= 0 && p.y < SCR_H)
     {
-        Pos px_p = p * Pos(CELL_PX_W, cell_px_h);
+        P px_p = p * P(CELL_PX_W, cell_px_h);
 
         const int px_x0 = px_p.x;
 
@@ -47,7 +47,7 @@ void draw_text(const std::string& text, const Pos& p, const Clr& clr, const Clr&
             bool is_new_line_char = false;
             if (*it == '\n')
             {
-                px_p = Pos(px_x0, px_p.y + cell_px_h);
+                px_p = P(px_x0, px_p.y + cell_px_h);
                 is_new_line_char = true;
             }
             if (px_p.x < 0 || px_p.x >= scr_px_w)
@@ -66,17 +66,17 @@ void draw_text(const std::string& text, const Pos& p, const Clr& clr, const Clr&
 
 void draw_normal_mode()
 {
-    const Pos viewport_size(lib_wrap::get_scr_size()); // TODO: This is true for now...
+    const P viewport_size(lib_wrap::scr_size()); // TODO: This is true for now...
 
-    const Pos p1(viewport_ + viewport_size - 1);
+    const P p1(viewport_ + viewport_size - 1);
 
     for (int x = viewport_.x; x <= p1.x; ++x)
     {
         for (int y = viewport_.y; y <= p1.y; ++y)
         {
-            const Pos p(x, y);
+            const P p(x, y);
 
-            const auto& render_data = world::terrain[p.x][p.y]->get_render_data();
+            const auto& render_data = world::terrain[p.x][p.y]->render_data();
 
             lib_wrap::draw_ch(render_data.ch, p, render_data.clr);
         }
@@ -84,8 +84,8 @@ void draw_normal_mode()
 
     for (const auto& mob_ptr : world::mobs)
     {
-        const auto& p           = mob_ptr->get_pos();
-        const auto& render_data = mob_ptr->get_render_data();
+        const auto& p           = mob_ptr->pos();
+        const auto& render_data = mob_ptr->render_data();
 
         lib_wrap::draw_ch(render_data.ch, p, render_data.clr);
     }

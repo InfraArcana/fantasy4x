@@ -20,7 +20,7 @@ void clear_scr();
 // screen, and that the map fills the whole screen.
 void draw_normal_mode();
 
-//void draw_text(const std::string& text, const Pos& p, const Clr& clr,
+//void draw_text(const std::string& text, const P& p, const Clr& clr,
 //               const Clr& bg_clr = clr_black);
 
 } // render

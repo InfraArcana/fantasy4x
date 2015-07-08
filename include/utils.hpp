@@ -38,62 +38,62 @@ Text_Lines split_str(std::string str, const std::string& delim);
 //-----------------------------------------------------------------------------
 // Geometry
 //-----------------------------------------------------------------------------
-struct Pos
+struct P
 {
-    Pos()                           : x(0), y(0) {}
-    Pos(const int x, const int y)   : x(x), y(y) {}
-    Pos(const Pos& p)               : x(p.x), y(p.y) {}
-    Pos(const int v)                : x(v), y(v) {}
+    P()                             : x(0), y(0) {}
+    P(const int x, const int y)     : x(x), y(y) {}
+    P(const P& p)                   : x(p.x), y(p.y) {}
+    P(const int v)                  : x(v), y(v) {}
 
-    Pos& operator=(const Pos& p)
+    P& operator=(const P& p)
     {
         x = p.x;
         y = p.y;
         return *this;
     }
 
-    Pos& operator*=(const int  v)   {x *= v;   y *= v;      return *this;}
-    Pos& operator*=(const Pos& p)   {x *= p.x; y *= p.y;    return *this;}
-    Pos& operator/=(const int  v)   {x /= v;   y /= v;      return *this;}
-    Pos& operator/=(const Pos& p)   {x /= p.x; y /= p.y;    return *this;}
-    Pos& operator+=(const Pos& p)   {x += p.x; y += p.y;    return *this;}
-    Pos& operator-=(const Pos& p)   {x -= p.x; y -= p.y;    return *this;}
-    Pos operator+(const Pos& p)     const {return Pos(x + p.x,  y + p.y);}
-    Pos operator+(const int v)      const {return Pos(x + v,    y + v);}
-    Pos operator-(const Pos& p)     const {return Pos(x - p.x,  y - p.y);}
-    Pos operator-(const int v)      const {return Pos(x - v,    y - v);}
-    Pos operator/(const int v)      const {return Pos(x / v,    y / v);}
-    Pos operator/(const Pos& p)     const {return Pos(x / p.x,  y / p.y);}
-    Pos operator*(const int v)      const {return Pos(x * v,    y * v);}
-    Pos operator*(const Pos& p)     const {return Pos(x * p.x,  y * p.y);}
-    bool operator==(const Pos& p)   const {return x == p.x  && y == p.y;}
-    bool operator!=(const Pos& p)   const {return x != p.x  || y != p.y;}
+    P& operator*=(const int  v)     {x *= v;   y *= v;      return *this;}
+    P& operator*=(const P& p)       {x *= p.x; y *= p.y;    return *this;}
+    P& operator/=(const int  v)     {x /= v;   y /= v;      return *this;}
+    P& operator/=(const P& p)       {x /= p.x; y /= p.y;    return *this;}
+    P& operator+=(const P& p)       {x += p.x; y += p.y;    return *this;}
+    P& operator-=(const P& p)       {x -= p.x; y -= p.y;    return *this;}
+    P operator+(const P& p)         const {return P(x + p.x,  y + p.y);}
+    P operator+(const int v)        const {return P(x + v,    y + v);}
+    P operator-(const P& p)         const {return P(x - p.x,  y - p.y);}
+    P operator-(const int v)        const {return P(x - v,    y - v);}
+    P operator/(const int v)        const {return P(x / v,    y / v);}
+    P operator/(const P& p)         const {return P(x / p.x,  y / p.y);}
+    P operator*(const int v)        const {return P(x * v,    y * v);}
+    P operator*(const P& p)         const {return P(x * p.x,  y * p.y);}
+    bool operator==(const P& p)     const {return x == p.x  && y == p.y;}
+    bool operator!=(const P& p)     const {return x != p.x  || y != p.y;}
     bool operator!=(const int v)    const {return x != v    || y != v;}
-    bool operator>(const Pos& p)    const {return x > p.x   && y > p.y;}
-    bool operator>(const int  v)    const {return x > v     && y > v;}
-    bool operator<(const Pos& p)    const {return x < p.x   && y < p.y;}
-    bool operator<(const int  v)    const {return x < v     && y < v;}
-    bool operator>=(const Pos&  p)  const {return x >= p.x  && y >= p.y;}
-    bool operator>=(const int   v)  const {return x >= v    && y >= v;}
-    bool operator<=(const Pos&  p)  const {return x <= p.x  && y <= p.y;}
-    bool operator<=(const int   v)  const {return x <= v    && y <= v;}
+    bool operator>(const P& p)      const {return x > p.x   && y > p.y;}
+    bool operator>(const int v)     const {return x > v     && y > v;}
+    bool operator<(const P& p)      const {return x < p.x   && y < p.y;}
+    bool operator<(const int v)     const {return x < v     && y < v;}
+    bool operator>=(const P& p)     const {return x >= p.x  && y >= p.y;}
+    bool operator>=(const int v)    const {return x >= v    && y >= v;}
+    bool operator<=(const P& p)     const {return x <= p.x  && y <= p.y;}
+    bool operator<=(const int v)    const {return x <= v    && y <= v;}
 
-    Pos get_signs() const
+    P signs() const
     {
-        return Pos(x == 0 ? 0 : x > 0 ? 1 : -1,
-                   y == 0 ? 0 : y > 0 ? 1 : -1);
+        return P(x == 0 ? 0 : x > 0 ? 1 : -1,
+                 y == 0 ? 0 : y > 0 ? 1 : -1);
     }
 
-    Pos get_pos_with_offset(const Pos& d)       const {return Pos(x + d.x, y + d.y);}
-    Pos get_pos_with_x_offset(const int dx)     const {return Pos(x + dx, y);}
-    Pos get_pos_with_y_offset(const int dy)     const {return Pos(x, y + dy);}
+    P pos_with_offset(const P& d)       const {return P(x + d.x, y + d.y);}
+    P pos_with_x_offset(const int dx)   const {return P(x + dx, y);}
+    P pos_with_y_offset(const int dy)   const {return P(x, y + dy);}
 
-    void set(const Pos& other)                  {x = other.x;   y = other.y;}
+    void set(const P& other)                    {x = other.x;   y = other.y;}
     void set(const int new_x, const int new_y)  {x = new_x;     y = new_y;}
 
-    void swap(Pos& p)
+    void swap(P& p)
     {
-        Pos p_temp(p);
+        P p_temp(p);
         p = *this;
         x = p_temp.x;
         y = p_temp.y;
@@ -104,24 +104,27 @@ struct Pos
 
 struct Rect
 {
-    Rect() : p0(Pos()), p1(Pos()) {}
+    Rect() : p0(P()), p1(P()) {}
 
-    Rect(const Pos& p0_, const Pos& p1_) :  p0(p0_), p1(p1_) {}
+    Rect(const P& p0_, const P& p1_) :
+        p0(p0_),
+        p1(p1_) {}
 
     Rect(const int x0, const int y0, const int x1, const int y1) :
-        p0(Pos(x0, y0)), p1(Pos(x1, y1)) {}
+        p0(P(x0, y0)),
+        p1(P(x1, y1)) {}
 
     Rect(const Rect& r) : p0(r.p0), p1(r.p1) {}
 
-    int get_w()             const {return p1.x - p0.x + 1;}
-    int get_h()             const {return p1.y - p0.y + 1;}
-    Pos get_dims()          const {return {get_w(), get_h()};}
-    int get_min_dim()       const {return std::min(get_w(), get_h());}
-    int get_max_dim()       const {return std::max(get_w(), get_h());}
-    Pos get_center_pos()    const {return ((p1 + p0) / 2);}
+    int w()             const {return p1.x - p0.x + 1;}
+    int h()             const {return p1.y - p0.y + 1;}
+    P dims()            const {return {w(), h()};}
+    int min_dim()       const {return std::min(w(), h());}
+    int max_dim()       const {return std::max(w(), h());}
+    P center_pos()      const {return ((p1 + p0) / 2);}
 
-    Pos p0;
-    Pos p1;
+    P p0;
+    P p1;
 };
 
 //-----------------------------------------------------------------------------

@@ -5,6 +5,10 @@
 #include "utils.hpp"
 #include "cmn_data.hpp"
 
+#ifdef SDL_MODE
+#include <SDL_image.h>
+#endif // SDL_MODE
+
 //-----------------------------------------------------------------------------
 // Console mode
 //-----------------------------------------------------------------------------
@@ -21,7 +25,7 @@ WINDOW* window_     = nullptr;
 
 std::ofstream log_f;
 
-int get_clr_pair(const Clr& clr, const Clr& clr_bg)
+int clr_pair(const Clr& clr, const Clr& clr_bg)
 {
     const auto clr_pair_idx = (clr * COLORS) + clr_bg;
 
@@ -122,9 +126,9 @@ void clear_scr()
     // TODO
 }
 
-Pos get_scr_size()
+P scr_size()
 {
-    Pos ret;
+    P ret;
 
     getmaxyx(window_, ret.y, ret.x);
 
@@ -132,7 +136,7 @@ Pos get_scr_size()
 }
 
 void draw_ch(const char ch,
-             const Pos& p,
+             const P& p,
              const Clr& clr,
              const Clr& clr_bg)
 {
@@ -141,32 +145,29 @@ void draw_ch(const char ch,
         return;
     }
 
-    const auto clr_pair = get_clr_pair(clr, clr_bg);
+    const auto clr_pair_used = clr_pair(clr, clr_bg);
 
-    attron(clr_pair);
+    attron(clr_pair_used);
 
     mvaddch(p.y, p.x, ch);
 
-    attroff(clr_pair);
+    attroff(clr_pair_used);
 }
 
-void draw_text(const std::string& str,
-               const Pos& p,
-               const Clr& clr,
-               const Clr& clr_bg)
+void draw_text(const std::string& str, const P& p, const Clr& clr, const Clr& clr_bg)
 {
     if (!is_inited_)
     {
         return;
     }
 
-    const auto clr_pair = get_clr_pair(clr, clr_bg);
+    const auto clr_pair_used = clr_pair(clr, clr_bg);
 
-    attron(clr_pair);
+    attron(clr_pair_used);
 
     mvprintw(p.y, p.x, str.c_str());
 
-    attroff(clr_pair);
+    attroff(clr_pair_used);
 }
 
 void sleep(unsigned int ms)
@@ -179,7 +180,7 @@ void sleep(unsigned int ms)
     // TODO
 }
 
-int get_key()
+int key()
 {
     if (!is_inited_)
     {
@@ -193,7 +194,6 @@ int get_key()
 
 //-----------------------------------------------------------------------------
 // SDL mode
-// NOTE: Not yet supported
 //-----------------------------------------------------------------------------
 #elif defined SDL_MODE
 
@@ -211,29 +211,29 @@ const int           nr_font_img_glyphs_x    = 32;
 const int           scr_bpp                 = 32;
 const int           cell_px_w               = 8;
 const int           cell_px_h               = 16;
-const int           scr_px_w                = SCR_W* CELL_PX_W;
-const int           scr_px_h                = SCR_H* CELL_PX_H;
+const int           scr_px_w                = scr_w* cell_px_w;
+const int           scr_px_h                = scr_h* cell_px_h;
 
 const std::string   font_img_path           = "images/curses_8x16.png";
 
-bool            font_px_data_[256][128];
+bool font_px_data_[256][128];
 
-void get_char_sheet_pos(char ch, Pos& dst)
+void char_sheet_pos(char ch, P& dst)
 {
     const int y = ch / nr_font_img_glyphs_x;
-    const int x = y == 0 ? ch : (ch % (y * nr_font_img_glyphs_x));
+
+    const int x = y == 0 ? ch :
+                  (ch % (y * nr_font_img_glyphs_x));
+
     dst.set(x, y);
 }
 
 void set_render_clr(const Clr& clr)
 {
-    /*
     SDL_SetRenderDrawColor(sdl_renderer_, clr.r, clr.g, clr.b, SDL_ALPHA_OPAQUE);
-    */
 }
 
-/*
-Uint32 get_px(const SDL_Surface& surface, int px_x, int px_y)
+Uint32 px(const SDL_Surface& surface, int px_x, int px_y)
 {
     int bpp = surface.format->BytesPerPixel;
     // Here p is the address to the pixel we want to retrieve
@@ -259,9 +259,7 @@ Uint32 get_px(const SDL_Surface& surface, int px_x, int px_y)
     }
     return -1;
 }
-*/
 
-/*
 void load_font_data()
 {
     TRACE_FUNC_BEGIN;
@@ -276,7 +274,7 @@ void load_font_data()
     {
         for (int y = 0; y < font_surface_tmp->h; ++y)
         {
-            font_px_data_[x][y] = get_px(*font_surface_tmp, x, y) != clr_bg;
+            font_px_data_[x][y] = px(*font_surface_tmp, x, y) != clr_bg;
         }
     }
 
@@ -284,23 +282,21 @@ void load_font_data()
 
     TRACE_FUNC_END;
 }
-*/
 
-/*
-void put_pxs_for_char(char ch, const Pos& px_p, const Clr& clr)
+void put_pxs_for_char(char ch, const P& px_p, const Clr& clr)
 {
-    Pos sheet_p;
-    get_char_sheet_pos(ch, sheet_p);
+    P sheet_p;
+    char_sheet_pos(ch, sheet_p);
 
     if (sheet_p.x >= 0)
     {
-        Pos sheet_px_p0 = sheet_p * Pos(cell_px_w, cell_px_h);
+        P sheet_px_p0 = sheet_p * P(cell_px_w, cell_px_h);
 
-        Pos sheet_px_p1 = sheet_px_p0 + Pos(cell_px_w - 1, cell_px_h - 1);
+        P sheet_px_p1 = sheet_px_p0 + P(cell_px_w - 1, cell_px_h - 1);
 
-        Pos scr_px_p = px_p;
+        P scr_px_p = px_p;
 
-        Pos sheet_px_p;
+        P sheet_px_p;
 
         set_render_clr(clr);
 
@@ -320,32 +316,29 @@ void put_pxs_for_char(char ch, const Pos& px_p, const Clr& clr)
         }
     }
 }
-*/
 
 void draw_rect_px(const Rect& px_r, const Clr& clr)
 {
-    /*
-    if (is_inited())
+    if (!is_inited_)
     {
-        SDL_Rect sdl_rect =
-        {
-            (Sint16)px_r.p0.x,
-            (Sint16)px_r.p0.y,
-            (Uint16)(px_r.p1.x - px_r.p0.x + 1),
-            (Uint16)(px_r.p1.y - px_r.p0.y + 1)
-        };
-
-
-        set_render_clr(clr);
-
-        SDL_RenderFillRect(sdl_renderer_, &sdl_rect);
+        return;
     }
-    */
+
+    SDL_Rect sdl_rect =
+    {
+        (Sint16)px_r.p0.x,
+        (Sint16)px_r.p0.y,
+        (Uint16)(px_r.p1.x - px_r.p0.x + 1),
+        (Uint16)(px_r.p1.y - px_r.p0.y + 1)
+    };
+
+    set_render_clr(clr);
+
+    SDL_RenderFillRect(sdl_renderer_, &sdl_rect);
 }
 
 void draw_rect(const Rect& r, const Clr& clr)
 {
-    /*
     const Rect px_r(
         r.p0.x * cell_px_w,
         r.p0.y * cell_px_h,
@@ -354,50 +347,47 @@ void draw_rect(const Rect& r, const Clr& clr)
     );
 
     draw_rect_px(px_r, clr);
-    */
 }
 
-const Pos get_scr_size()
+void draw_char_at_px(const char ch,
+                     const P& px_p,
+                     const Clr& clr,
+                     const Clr& bg_clr)
 {
-    Pos ret;
-
-    SDL_GetWindowSize(sdl_window_, &ret.x, &ret.y);
-
-    ret /= Pos(SCR_W, SCR_H);
-
-    return ret;
-}
-
-void draw_char_at_px(char ch, const Pos& px_p, const Clr& clr, const Clr& bg_clr)
-{
-    /*
     const Rect bg_px_r( px_p, {px_p.x + cell_px_w - 1, px_p.y + cell_px_h - 1} );
     draw_rect_px(bg_px_r, bg_clr);
 
     put_pxs_for_char(ch, px_p, clr);
-    */
 }
 
-void draw_char_at(char ch, const Pos& p, const Clr& clr, const Clr& bg_clr = clr_black)
+void draw_char_at(const char ch,
+                  const P& p,
+                  const Clr& clr,
+                  const Clr& bg_clr)
 {
-    /*
-    const Pos px_p = {p.x * cell_px_w, p.y * cell_px_h};
+    const P px_p = {p.x * cell_px_w, p.y * cell_px_h};
 
     draw_char_at_px(ch, px_p, clr, bg_clr);
-    */
 }
 
-//void draw_char_in_map(char ch, const P* p, const Clr* clr, const Clr* bg_clr) {
-//  if(is_inited()) {
-//    if(p->x >= 0 && p->y >= 0 && p->x < MAP_W && p->y < MAP_H) {
-//      P px_p = *p;
-//
-//      p_multipl_xy(&px_p, cell_px_w, CELL_PX_H);
-//
-//      draw_char_at_px(ch, &px_p, clr, true, bg_clr);
-//    }
-//  }
-//}
+/*
+void draw_char_in_map(char ch, const P* p, const Clr* clr, const Clr* bg_clr)
+{
+    if (!is_inited_)
+    {
+        return;
+    }
+
+    if (p->x >= 0 && p->y >= 0 && p->x < map_w && p->y < map_h)
+    {
+        P px_p = *p;
+
+        p_multipl_xy(&px_p, cell_px_w, cell_px_h);
+
+        draw_char_at_px(ch, &px_p, clr, true, bg_clr);
+    }
+}
+*/
 
 } // namespace
 
@@ -426,10 +416,10 @@ void init()
     TRACE << "Setting up rendering window" << std::endl;
 
     sdl_window_ = SDL_CreateWindow(
-                      title,
+                      title.c_str(),
                       SDL_WINDOWPOS_UNDEFINED,
                       SDL_WINDOWPOS_UNDEFINED,
-                      SCR_PX_W, SCR_PX_H,
+                      scr_px_w, scr_px_h,
                       SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
     sdl_renderer_ = SDL_CreateRenderer(sdl_window_, -1, SDL_RENDERER_ACCELERATED);
@@ -445,7 +435,7 @@ void cleanup()
 {
     TRACE_FUNC_BEGIN;
 
-    if (!is_inited)
+    if (!is_inited_)
     {
         return;
     }
@@ -472,17 +462,17 @@ void cleanup()
 
 void update_scr()
 {
-    if (!is_inited)
+    if (!is_inited_)
     {
         return;
     }
 
-    // TODO
+    SDL_RenderPresent(sdl_renderer_);
 }
 
 void clear_scr()
 {
-    if (!is_inited)
+    if (!is_inited_)
     {
         return;
     }
@@ -492,33 +482,47 @@ void clear_scr()
     SDL_RenderClear(sdl_renderer_);
 }
 
-/*
+P scr_size()
+{
+    P ret;
+
+    SDL_GetWindowSize(sdl_window_, &ret.x, &ret.y);
+
+    ret /= P(scr_w, scr_h);
+
+    return ret;
+}
+
 void on_window_resized()
 {
-    if (!is_inited())
+    /*
+    if (!is_inited_)
     {
         return;
     }
+
     Uint32 sdl_window_flags = SDL_GetWindowFlags(sdl_window_);
+
     if (
         !(sdl_window_flags & SDL_WINDOW_MAXIMIZED)   &&
         !(sdl_window_flags & SDL_WINDOW_FULLSCREEN)  &&
-            !(sdl_window_flags & SDL_WINDOW_FULLSCREEN_DESKTOP))
+        !(sdl_window_flags & SDL_WINDOW_FULLSCREEN_DESKTOP))
     {
-        Pos px_size;
-        get_window_px_size(px_size);
-        px_size.x = (px_size.x / CELL_PX_W) * CELL_PX_W;
-        px_size.y = (px_size.y / CELL_PX_H) * CELL_PX_H;
+        P px_size = scr_size();
+
+        px_size.x = (px_size.x / cell_px_w) * cell_px_w;
+        px_size.y = (px_size.y / cell_px_h) * cell_px_h;
+
         SDL_SetWindowSize(sdl_window_, px_size.x, px_size.y);
     }
 
     clear_scr();
     draw_normal_mode();
     render_present();
+    */
 }
-*/
 
-void sleep(unsigned int ms)
+void sleep(const unsigned int ms)
 {
     if (!is_inited_)
     {
@@ -540,9 +544,12 @@ void sleep(unsigned int ms)
     }
 }
 
-void draw_ch(const char ch, const Clr& clr, const Clr& clr_bg = clr_black)
+void draw_ch(const char ch,
+             const P& p,
+             const Clr& clr,
+             const Clr& clr_bg)
 {
-    if (!is_inited)
+    if (!is_inited_)
     {
         return;
     }
@@ -550,9 +557,9 @@ void draw_ch(const char ch, const Clr& clr, const Clr& clr_bg = clr_black)
     // TODO
 }
 
-void draw_text(const std::string& str, const Clr& clr)
+void draw_text(const std::string& str, const P& p, const Clr& clr)
 {
-    if (!is_inited)
+    if (!is_inited_)
     {
         return;
     }
@@ -560,14 +567,13 @@ void draw_text(const std::string& str, const Clr& clr)
     // TODO
 }
 
-void get_key()
+int key()
 {
-    if (!is_inited)
+    if (!is_inited_)
     {
-        return;
+        return 0;
     }
 
-    SDL_RenderPresent(sdl_renderer_);
 }
 
 } // lib_wrap (SDL_MODE)
