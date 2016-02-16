@@ -3,9 +3,9 @@
 #include <assert.h>
 #include <string>
 #include <map>
+#include <vector>
 
-#include "lib_wrap.hpp"
-#include "utils.hpp"
+#include "io.hpp"
 #include "file_io.hpp"
 
 //-----------------------------------------------------------------------------
@@ -40,7 +40,7 @@ namespace
 
 enum class Race_Data_Header_Id
 {
-    NAME,
+    name,
 };
 
 std::vector<Race_Def> race_defs_;
@@ -55,7 +55,7 @@ void init()
 
     std::map<std::string, Race_Data_Header_Id> header_string_to_id;
 
-    header_string_to_id["NAME"] = Race_Data_Header_Id::NAME;
+    header_string_to_id["NAME"] = Race_Data_Header_Id::name;
 
     Data_File_Content file_content = file_io::read_data_file("data/races.dat");
 
@@ -69,7 +69,7 @@ void init()
 
             switch (header)
             {
-            case Race_Data_Header_Id::NAME:
+            case Race_Data_Header_Id::name:
             {
                 Text_Lines data = split_str(data_element.data, "|");
 

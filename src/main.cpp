@@ -1,13 +1,12 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "lib_wrap.hpp"
-#include "utils.hpp"
-#include "render.hpp"
-#include "input.hpp"
-#include "cmn_data.hpp"
-#include "world.hpp"
+#include "io.hpp"
 #include "mon.hpp"
+#include "world.hpp"
+#include "ui.hpp"
+#include "utils.hpp"
+#include "state.hpp"
 
 #ifdef _WIN32
 #undef main
@@ -20,40 +19,39 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
-    lib_wrap::init();
-    render::init();
-    //input::init();
+    io::init();
     race_data::init();
     world::init();
+    states::init();
 
-    int     key         = 0;
-    bool    quit_game   = false;
+    auto main_menu_state    = std::make_unique<Main_Menu_State>();
+    auto state              = std::make_unique<State>(std::move(main_menu_state));
+    states::push_state(std::move(state));
+
+    bool quit_game = false;
 
     while (!quit_game)
     {
-        lib_wrap::clear_scr();
+        io::clear_scr();
 
-        render::draw_normal_mode();
+        states::render();
 
-        lib_wrap::update_scr();
+        io::update_scr();
 
-        if (key == 'q') // NOTE: Temporary solution to quit the game nicely
+        Input_Data input = io::wait_input();
+
+        if (input.key == 'q') // NOTE: Temporary solution to quit the game nicely
         {
             quit_game = true;
         }
 
-        //input::cmd(&quit_game);
-
-        world::process();
-
-        lib_wrap::sleep(1);
+        states::handle_input(input);
     }
 
+    states::cleanup();
     world::cleanup();
     race_data::cleanup();
-    //input::cleanup();
-    render::cleanup();
-    lib_wrap::cleanup();
+    io::cleanup();
 
     TRACE_FUNC_END;
     return 0;

@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "utils.hpp"
+#include "cmn_data.hpp"
 
 class Map_Ent
 {
@@ -34,8 +35,6 @@ protected:
     Char_And_Clr render_data_;
 };
 
-typedef std::unique_ptr<Map_Ent> Map_Ent_Ptr;
-
 class Castle : public Map_Ent
 {
 public:
@@ -53,12 +52,14 @@ public:
 namespace world
 {
 
-extern Map_Ent_Ptr              terrain[map_w][map_h];
-extern std::vector<Map_Ent_Ptr> mobs;
+extern std::unique_ptr<Map_Ent> terrain[map_w][map_h];
+extern std::vector< std::unique_ptr<Map_Ent> > mobs;
 
 void init();
 
 void cleanup();
+
+void render();
 
 void process();
 

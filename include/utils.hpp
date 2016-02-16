@@ -3,9 +3,55 @@
 
 #include <string>
 #include <vector>
+#include <cstddef>
+#include <memory>
+#include <type_traits>
+#include <utility>
 
-#include "lib_wrap.hpp"
-#include "cmn_data.hpp"
+#include "colors.hpp"
+
+//-----------------------------------------------------------------------------
+// Custom make_unique functionality, until we have this in C++14...
+// Source: https://isocpp.org/files/papers/N3656.txt
+//-----------------------------------------------------------------------------
+namespace std
+{
+
+template<class T> struct _Unique_if
+{
+    typedef unique_ptr<T> _Single_object;
+};
+
+template<class T> struct _Unique_if<T[]>
+{
+    typedef unique_ptr<T[]> _Unknown_bound;
+};
+
+template<class T, size_t N> struct _Unique_if<T[N]>
+{
+    typedef void _Known_bound;
+};
+
+template<class T, class... Args>
+typename _Unique_if<T>::_Single_object
+make_unique(Args&&... args)
+{
+    return unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+
+template<class T>
+typename _Unique_if<T>::_Unknown_bound
+make_unique(size_t n)
+{
+    typedef typename remove_extent<T>::type U;
+    return unique_ptr<T>(new U[n]());
+}
+
+template<class T, class... Args>
+typename _Unique_if<T>::_Known_bound
+make_unique(Args&&...) = delete;
+
+} // std
 
 //-----------------------------------------------------------------------------
 // Text
@@ -165,21 +211,39 @@ struct Rect
 //};
 
 //-----------------------------------------------------------------------------
-// Direction
+// Direction, alignment
 //-----------------------------------------------------------------------------
 //Useful to iterate over in algorithms, or passing as direction parameter
-enum dir
+enum class Dir
 {
-    DOWN_LEFT   = 1,
-    DOWN        = 2,
-    DOWN_RIGHT  = 3,
-    LEFT        = 4,
-    CENTER      = 5,
-    RIGHT       = 6,
-    UP_LEFT     = 7,
-    UP          = 8,
-    UP_RIGHT    = 9,
-    DIR_END     = 10
+    down_left   = 1,
+    down        = 2,
+    down_right  = 3,
+    left        = 4,
+    center      = 5,
+    right       = 6,
+    up_left     = 7,
+    up          = 8,
+    up_right    = 9,
+    dir_end     = 10
+};
+
+enum class Axis
+{
+    h,  // Horizontal
+    v   // Vertical
+};
+
+enum class X_Align
+{
+    left,
+    center
+};
+
+enum class Y_Align
+{
+    top,
+    mid
 };
 
 #endif // CMN_UTILS_HPP

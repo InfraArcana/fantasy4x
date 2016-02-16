@@ -1,10 +1,10 @@
-#ifndef TRACE_HPP
-#define TRACE_HPP
+#ifndef IO_HPP
+#define IO_HPP
 
-#include <assert.h>
 #include <iostream>
+#include <cassert>
 
-struct P;
+#include "utils.hpp"
 
 //-----------------------------------------------------------------------------
 // OPTIONS
@@ -14,7 +14,6 @@ struct P;
 // 1 : Standard
 // 2 : Verbose
 #define TRACE_LVL 1
-//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
 // Debug
@@ -58,65 +57,42 @@ struct P;
 #endif // NDEBUG
 
 //-----------------------------------------------------------------------------
-// Colors
+// Font type
 //-----------------------------------------------------------------------------
-#ifdef CONSOLE_MODE
-
-#include <curses.h>
-
-typedef short Clr;
-
-const Clr clr_black     = COLOR_BLACK;
-const Clr clr_red       = COLOR_RED;
-const Clr clr_green     = COLOR_GREEN;
-const Clr clr_yellow    = COLOR_YELLOW;
-const Clr clr_blue      = COLOR_BLUE;
-const Clr clr_magenta   = COLOR_MAGENTA;
-const Clr clr_cyan      = COLOR_CYAN;
-const Clr clr_white     = COLOR_WHITE;
-
-#elif defined SDL_MODE
-
-#include <SDL.h>
-
-typedef SDL_Color Clr;
-
-const Clr clr_black         = {  0,   0,   0, SDL_ALPHA_OPAQUE};
-//const Clr clr_gray          = {128, 128, 128, SDL_ALPHA_OPAQUE};
-const Clr clr_white         = {192, 192, 192, SDL_ALPHA_OPAQUE};
-//const Clr clr_white_high    = {255, 255, 255, SDL_ALPHA_OPAQUE};
-
-const Clr clr_red           = {128,   0,   0, SDL_ALPHA_OPAQUE};
-//const Clr clr_red_lgt       = {255,   0,   0, SDL_ALPHA_OPAQUE};
-
-const Clr clr_green         = {  0, 128,   0, SDL_ALPHA_OPAQUE};
-//const Clr clr_green_lgt     = {  0, 255,   0, SDL_ALPHA_OPAQUE};
-
-const Clr clr_yellow        = {255, 255,   0, SDL_ALPHA_OPAQUE};
-
-const Clr clr_blue          = {  0,   0, 139, SDL_ALPHA_OPAQUE};
-//const Clr clr_blue_lgt      = { 92,  92, 255, SDL_ALPHA_OPAQUE};
-
-const Clr clr_magenta       = {139,   0, 139, SDL_ALPHA_OPAQUE};
-//const Clr clr_magenta_lgt   = {255,   0, 255, SDL_ALPHA_OPAQUE};
-
-const Clr clr_cyan          = {  0, 128, 128, SDL_ALPHA_OPAQUE};
-//const Clr clr_cyanLgt       = {  0, 255, 255, SDL_ALPHA_OPAQUE};
-
-//const Clr clr_brown         = {153, 102,  61, SDL_ALPHA_OPAQUE};
-//const Clr clr_brown_drk     = { 96,  64,  32, SDL_ALPHA_OPAQUE};
-//const Clr clr_brown_xdrk    = { 48,  32,  16, SDL_ALPHA_OPAQUE};
-
-//const Clr clr_violet        = {128,   0, 255, SDL_ALPHA_OPAQUE};
-
-//const Clr clr_orange        = {255, 128,   0, SDL_ALPHA_OPAQUE};
-
-#endif
+enum class Font_Size
+{
+    small,
+    big
+};
 
 //-----------------------------------------------------------------------------
-// Lib wrap interface
+// Input data structures
 //-----------------------------------------------------------------------------
-namespace lib_wrap
+enum class Mouse_Btn
+{
+    none,
+    left,
+    right
+};
+
+struct Input_Data
+{
+    Input_Data() :
+        key         (-1),
+        mouse_px_p  (),
+        mouse_btn   (Mouse_Btn::none) {}
+
+    int key; // NOTE: ASCII symbol
+
+    P mouse_px_p;
+
+    Mouse_Btn mouse_btn;
+};
+
+//-----------------------------------------------------------------------------
+// Input/output handling
+//-----------------------------------------------------------------------------
+namespace io
 {
 
 void init();
@@ -127,7 +103,10 @@ void update_scr();
 
 void clear_scr();
 
-P scr_size();
+P scr_px_size();
+
+// TODO: This should probably return a rectangle
+P viewport();
 
 void draw_ch(const char ch,
              const P& p,
@@ -137,12 +116,16 @@ void draw_ch(const char ch,
 void draw_text(const std::string& str,
                const P& p,
                const Clr& clr,
-               const Clr& clr_bg = clr_black);
+               const Clr& clr_bg = clr_black,
+               const X_Align x_align = X_Align::left,
+               const Y_Align y_align = Y_Align::top);
+
+void draw_rect(const Rect& r, const Clr& clr);
 
 void sleep(const unsigned int ms);
 
-int key();
+Input_Data wait_input();
 
-} // lib_wrap
+} // io
 
-#endif // TRACE_HPP
+#endif // IO_HPP
