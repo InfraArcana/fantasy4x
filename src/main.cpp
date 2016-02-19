@@ -7,6 +7,7 @@
 #include "ui.hpp"
 #include "utils.hpp"
 #include "state.hpp"
+#include "script.hpp"
 
 #ifdef _WIN32
 #undef main
@@ -19,6 +20,7 @@ int main(int argc, char* argv[])
     (void)argc;
     (void)argv;
 
+    script::init();
     io::init();
     race_data::init();
     world::init();
@@ -52,6 +54,7 @@ int main(int argc, char* argv[])
     world::cleanup();
     race_data::cleanup();
     io::cleanup();
+    script::cleanup();
 
     TRACE_FUNC_END;
     return 0;

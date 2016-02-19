@@ -4,6 +4,7 @@
 #include <SDL_image.h>
 
 #include "cmn_data.hpp"
+#include "script.hpp"
 
 namespace io
 {
@@ -14,11 +15,21 @@ namespace
 bool            is_inited_      = false;
 SDL_Window*     sdl_window_     = nullptr;
 SDL_Renderer*   sdl_renderer_   = nullptr;
-TTF_Font*       font_           = nullptr;
+
+SDL_Event sdl_event_;
 
 P viewport_(0, 0);
 
-SDL_Event       sdl_event_;
+P cell_px_dim_  (0, 0);
+P scr_px_dim_   (0, 0);
+
+TTF_Font* font_ = nullptr;
+
+int scale_ = 1;
+
+P scr_px_mid_           (0, 0);
+P scr_px_dim_scaled_    (0, 0);
+
 
 // Adjusts the window size to a multiple of the cell size (if not maximized or fullscreen)
 void on_window_resized()
@@ -50,142 +61,10 @@ void on_window_resized()
     */
 }
 
-//void char_sheet_pos(char ch, P& dst)
-//{
-//    const int y = ch / nr_font_img_glyphs_x;
-//
-//    const int x = y == 0 ? ch :
-//                  (ch % (y * nr_font_img_glyphs_x));
-//
-//    dst.set(x, y);
-//}
-
 void set_render_clr(const Clr& clr)
 {
     SDL_SetRenderDrawColor(sdl_renderer_, clr.r, clr.g, clr.b, SDL_ALPHA_OPAQUE);
 }
-
-//Uint32 px(const SDL_Surface& surface, int px_x, int px_y)
-//{
-//    int bpp = surface.format->BytesPerPixel;
-//    // Here p is the address to the pixel we want to retrieve
-//    Uint8* px = (Uint8*)surface.pixels + px_y * surface.pitch + px_x * bpp;
-//
-//    switch (bpp)
-//    {
-//    case 1:   return *px;           break;
-//    case 2:   return *(Uint16*)px;  break;
-//    case 3:
-//    {
-//        if (SDL_BYTEORDER == SDL_BIG_ENDIAN)
-//        {
-//            return px[0] << 16 | px[1] << 8 | px[2];
-//        }
-//        else
-//        {
-//            return px[0] | px[1] << 8 | px[2] << 16;
-//        }
-//    } break;
-//    case 4:   return *(Uint32*)px;  break;
-//    default:  return -1;            break;
-//    }
-//    return -1;
-//}
-
-//void load_font_data()
-//{
-//    TRACE_FUNC_BEGIN;
-//
-//    SDL_Surface* font_surface_tmp = IMG_Load(font_img_path.c_str());
-//
-//    assert(font_surface_tmp && "Failed to load font image");
-//
-//    Uint32 clr_bg = SDL_MapRGB(font_surface_tmp->format, 0, 0, 0);
-//
-//    for (int x = 0; x < font_surface_tmp->w; ++x)
-//    {
-//        for (int y = 0; y < font_surface_tmp->h; ++y)
-//        {
-//            font_px_data_[x][y] = px(*font_surface_tmp, x, y) != clr_bg;
-//        }
-//    }
-//
-//    SDL_FreeSurface(font_surface_tmp);
-//
-//    TRACE_FUNC_END;
-//}
-
-//void put_pxs_for_char(char ch, const P& px_p, const Clr& clr)
-//{
-//    P sheet_p;
-//    char_sheet_pos(ch, sheet_p);
-//
-//    if (sheet_p.x >= 0)
-//    {
-//        P sheet_px_p0 = sheet_p * P(cell_px_w, cell_px_h);
-//
-//        P sheet_px_p1 = sheet_px_p0 + P(cell_px_w - 1, cell_px_h - 1);
-//
-//        P scr_px_p = px_p;
-//
-//        P sheet_px_p;
-//
-//        set_render_clr(clr);
-//
-//        for (sheet_px_p.x = sheet_px_p0.x; sheet_px_p.x <= sheet_px_p1.x; ++sheet_px_p.x)
-//        {
-//            scr_px_p.y = px_p.y;
-//
-//            for (sheet_px_p.y = sheet_px_p0.y; sheet_px_p.y <= sheet_px_p1.y; ++sheet_px_p.y)
-//            {
-//                if (font_px_data_[sheet_px_p.x][sheet_px_p.y])
-//                {
-//                    SDL_RenderDrawPoint(sdl_renderer_, scr_px_p.x, scr_px_p.y);
-//                }
-//                ++scr_px_p.y;
-//            }
-//            ++scr_px_p.x;
-//        }
-//    }
-//}
-
-//void draw_char_at_px(const char ch,
-//                     const P& px_p,
-//                     const Clr& clr,
-//                     const Clr& bg_clr)
-//{
-//    const Rect bg_px_r( px_p, {px_p.x + cell_px_w - 1, px_p.y + cell_px_h - 1} );
-//    draw_rect_px(bg_px_r, bg_clr);
-//
-//    put_pxs_for_char(ch, px_p, clr);
-//}
-
-//void draw_char_at(const char ch,
-//                  const P& p,
-//                  const Clr& clr,
-//                  const Clr& bg_clr)
-//{
-//    const P px_p = {p.x * cell_px_w, p.y * cell_px_h};
-//
-//    draw_char_at_px(ch, px_p, clr, bg_clr);
-//}
-
-//void draw_char_in_map(char ch, const P* p, const Clr* clr, const Clr* bg_clr)
-//{
-//    if (!is_inited_)
-//    {
-//        return;
-//    }
-//
-//    if (p->x >= 0 && p->y >= 0 && p->x < map_w && p->y < map_h)
-//    {
-//        P px_p = *p;
-//
-//        p_multipl_xy(&px_p, cell_px_w, cell_px_h);
-//
-//        draw_char_at_px(ch, &px_p, clr, true, bg_clr);
-//    }
-//}
 
 } // namespace
 
@@ -195,6 +74,30 @@ void init()
 
     cleanup();
 
+    //-----------------------------------------------------------------------------
+    // Set up scripted parameters
+    //-----------------------------------------------------------------------------
+    script::load("ui.lua");
+
+    cell_px_dim_.x              = script::get_int("cell_width");
+    cell_px_dim_.y              = script::get_int("cell_height");
+
+    scr_px_dim_.x               = script::get_int("screen_width");
+    scr_px_dim_.y               = script::get_int("screen_height");
+
+    scale_                      = script::get_int("scale");
+
+    const std::string font_name = script::get_str("font");
+
+    const int font_size         = script::get_int("font_size");
+
+    scr_px_mid_                 = scr_px_dim_ / 2;
+    scr_px_dim_scaled_          = scr_px_dim_ * scale_;
+
+
+    //-----------------------------------------------------------------------------
+    // SDL
+    //-----------------------------------------------------------------------------
     if (SDL_Init(SDL_INIT_EVERYTHING) == -1)
     {
         TRACE << "Failed to init SDL"   << std::endl
@@ -218,32 +121,35 @@ void init()
     const std::string title = game_name + " " + game_version_str;
 
     TRACE << "Setting up rendering window (scaled)" << std::endl
-          << "Size: " << scr_px_w_scaled << "x" << scr_px_h_scaled
+          << "Size: " << scr_px_dim_scaled_.x << "x" << scr_px_dim_scaled_.y
           << std::endl;
 
     sdl_window_ = SDL_CreateWindow(
                       title.c_str(),
                       SDL_WINDOWPOS_UNDEFINED,
                       SDL_WINDOWPOS_UNDEFINED,
-                      scr_px_w_scaled,
-                      scr_px_h_scaled,
+                      scr_px_dim_scaled_.x,
+                      scr_px_dim_scaled_.y,
                       SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
     sdl_renderer_ = SDL_CreateRenderer(sdl_window_, -1, SDL_RENDERER_ACCELERATED);
 
     TRACE << "Setting logical render size" << std::endl
-          << "Size: " << scr_px_w << "x" << scr_px_h
+          << "Size: " << scr_px_dim_.x << "x" << scr_px_dim_.y
           << std::endl;
 
     SDL_RenderSetLogicalSize(sdl_renderer_,
-                             scr_px_w,
-                             scr_px_h);
+                             scr_px_dim_.x,
+                             scr_px_dim_.y);
 
-    TRACE << "Loading font" << std::endl;
+    //-----------------------------------------------------------------------------
+    // Font
+    //-----------------------------------------------------------------------------
+    const std::string font_path = "fonts/" + font_name;
 
-    const std::string font_path = "fonts/Anonymous.ttf";
+    TRACE << "Loading font: " + font_path << std::endl;
 
-    font_ = TTF_OpenFont(font_path.c_str(), 12);
+    font_ = TTF_OpenFont(font_path.c_str(), font_size);
 
     if (font_ == nullptr)
     {
@@ -315,13 +221,18 @@ void clear_scr()
     SDL_RenderClear(sdl_renderer_);
 }
 
-P scr_px_size()
+P scr_px_dim()
 {
-    P ret;
+//    P ret;
+//
+//    SDL_GetWindowSize(sdl_window_, &ret.x, &ret.y);
 
-    SDL_GetWindowSize(sdl_window_, &ret.x, &ret.y);
+    return scr_px_dim_;
+}
 
-    return ret;
+P scr_px_mid()
+{
+    return scr_px_mid_;
 }
 
 P viewport()
@@ -495,23 +406,34 @@ Input_Data wait_input()
             is_done = true;
             break;
 
+        // Text keyboard input (i.e. letter characters and such)
         case SDL_TEXTINPUT:
             d.key   = sdl_event_.text.text[0];
             is_done = true;
             break;
 
-//        case SDL_KEYDOWN:
-//            d.key =
-//            key_pressed(sdl_event_.key.keysym.sym, quit_game);
-//            done = true;
-//            break;
+        // Misc keyboard input (i.e. function keys)
+        case SDL_KEYDOWN:
+            d.key   = sdl_event_.key.keysym.sym;
+            is_done = true;
+
+            // Re-initialize the io module (including script parsing)?
+            if (d.key == SDLK_F5)
+            {
+                // Clear the input data first
+                d = Input_Data();
+
+                init();
+            }
+            break;
 
         default:
             break;
-        }
+        } // switch
 
         sleep(1);
-    }
+
+    } // while
 
     return d;
 }

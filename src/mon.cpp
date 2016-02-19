@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "io.hpp"
-#include "file_io.hpp"
 
 //-----------------------------------------------------------------------------
 // Monster
@@ -51,39 +50,39 @@ void init()
 {
     TRACE_FUNC_BEGIN;
 
-    cleanup();
-
-    std::map<std::string, Race_Data_Header_Id> header_string_to_id;
-
-    header_string_to_id["NAME"] = Race_Data_Header_Id::name;
-
-    Data_File_Content file_content = file_io::read_data_file("data/races.dat");
-
-    for (const Data_File_Section& data_section : file_content)
-    {
-        Race_Def race_def;
-
-        for (const Data_File_Element& data_element : data_section)
-        {
-            const Race_Data_Header_Id header = header_string_to_id.at(data_element.header);
-
-            switch (header)
-            {
-            case Race_Data_Header_Id::name:
-            {
-                Text_Lines data = split_str(data_element.data, "|");
-
-                assert(data.size() == 2); // Base name & plural name
-
-                race_def.name           = data[0];
-                race_def.name_plural    = data[1];
-                break;
-            }
-            }
-        }
-
-        race_defs_.push_back(race_def);
-    }
+//    cleanup();
+//
+//    std::map<std::string, Race_Data_Header_Id> header_string_to_id;
+//
+//    header_string_to_id["NAME"] = Race_Data_Header_Id::name;
+//
+//    Data_File_Content file_content = file_io::read_data_file("data/races.dat");
+//
+//    for (const Data_File_Section& data_section : file_content)
+//    {
+//        Race_Def race_def;
+//
+//        for (const Data_File_Element& data_element : data_section)
+//        {
+//            const Race_Data_Header_Id header = header_string_to_id.at(data_element.header);
+//
+//            switch (header)
+//            {
+//            case Race_Data_Header_Id::name:
+//            {
+//                Text_Lines data = split_str(data_element.data, "|");
+//
+//                assert(data.size() == 2); // Base name & plural name
+//
+//                race_def.name           = data[0];
+//                race_def.name_plural    = data[1];
+//                break;
+//            }
+//            }
+//        }
+//
+//        race_defs_.push_back(race_def);
+//    }
 
     TRACE_FUNC_END;
 }

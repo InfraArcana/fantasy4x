@@ -14,8 +14,9 @@ Ui_Element::Ui_Element(const P& p, const P& size) :
 //-----------------------------------------------------------------------------
 // Button
 //-----------------------------------------------------------------------------
+// TODO: Size should probably be set up from script?
 Button::Button(const std::string text) :
-    Ui_Element  (P(), P(cell_px_w * 3, cell_px_h)),
+    Ui_Element  (P(), P(120, 24)),
     text_       (text) {}
 
 void Button::render() const
@@ -36,10 +37,11 @@ void Button::on_input(const Input_Data& input)
 //-----------------------------------------------------------------------------
 // Popup
 //-----------------------------------------------------------------------------
+// TODO: Size should probably be set up from script?
 Popup::Popup(const std::string title,
              const std::string text,
              std::vector< std::unique_ptr<Button> >& buttons) :
-    Ui_Element  (P(scr_px_w_half, scr_px_h_half), P(cell_px_w * 12, cell_px_h * 6)),
+    Ui_Element  (io::scr_px_mid(), P(400, 300)),
     title_      (title),
     text_       (text)
 {
@@ -48,7 +50,8 @@ Popup::Popup(const std::string title,
     const size_t    NR_BTNS     = buttons.size();
     const int       step_size   = w / NR_BTNS;
 
-    P btn_p(a.p0.x + (step_size / 2), a.p1.y - cell_px_h);
+    // TODO: This stuff should probably be set up from script?
+    P btn_p(a.p0.x + (step_size / 2), a.p1.y - 24);
 
     for (auto& btn : buttons)
     {
@@ -71,8 +74,11 @@ void Popup::render() const
                   X_Align::center,
                   Y_Align::top);
 
+    // TODO: Should probably be set up from script?
+    const P text_p(a.p0.x, a.p0.y + 24);
+
     io::draw_text(text_,
-                  P(a.p0.x, a.p0.y + cell_px_h),
+                  text_p,
                   clr_white_high,
                   clr_black,
                   X_Align::left,

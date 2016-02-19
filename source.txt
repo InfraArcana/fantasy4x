@@ -1,17 +1,17 @@
 ./include/cmn_data.hpp
 ./include/colors.hpp
-./include/file_io.hpp
 ./include/io.hpp
 ./include/mon.hpp
+./include/script.hpp
 ./include/state.hpp
 ./include/ui.hpp
 ./include/utils.hpp
 ./include/world.hpp
 
-./src/file_io.cpp
 ./src/io.cpp
 ./src/main.cpp
 ./src/mon.cpp
+./src/script.cpp
 ./src/state.cpp
 ./src/ui.cpp
 ./src/utils.cpp

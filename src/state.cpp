@@ -31,7 +31,7 @@ void Main_Menu_State::on_pushed()
 
     buttons.push_back(std::make_unique<Button>("Continue"));
 
-    auto popup = std::make_unique<Popup>("Hello", "Welcome to the game", buttons);
+    auto popup = std::make_unique<Popup>("Hello", "This is a game.", buttons);
 
     auto state = std::make_unique<State>();
 
@@ -43,7 +43,7 @@ void Main_Menu_State::on_pushed()
 void Map_State::render() const
 {
     io::draw_text("This is the map",
-                  P(scr_px_w_half, 0),
+                  P(io::scr_px_mid().x, 0),
                   clr_green_lgt,
                   clr_black,
                   X_Align::center,

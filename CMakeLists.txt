@@ -93,10 +93,10 @@ if (WIN32)
 
 		# Use the SDL2 lib distributed with the project
 
-		set (SDL2_DISTR_DIR
+		set (SDL2_DIR
 			${PROJECT_SOURCE_DIR}/libs/SDL2-2.0.3-i686-w64-mingw32)
 
-		set (CMAKE_PREFIX_PATH ${SDL2_DISTR_DIR})
+		set (CMAKE_PREFIX_PATH ${SDL2_DIR})
 
 		find_library (SDL2_LIBRARY       NAMES SDL2       REQUIRED)
 		find_library (SDL2main_LIBRARY   NAMES SDL2main   REQUIRED)
@@ -115,7 +115,7 @@ if (WIN32)
 		# Copy dll file(s) to target directory
 		add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 			COMMAND ${CMAKE_COMMAND} -E copy_directory
-				"${SDL2_DISTR_DIR}/bin"
+				"${SDL2_DIR}/bin"
 				${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 	endif()
 
@@ -141,6 +141,27 @@ else() # Not Windows platform
 		include_directories (${SDL2_INCLUDE_DIRS})
 	endif()
 endif()
+
+# Lua
+set (LUA_DIR
+	${PROJECT_SOURCE_DIR}/libs/lua-5.3.2_Win32_dllw4_lib)
+
+set (CMAKE_PREFIX_PATH ${LUA_DIR})
+
+find_library (LUA_LIBRARY NAMES lua53 REQUIRED)
+
+set (LIBS ${LIBS} ${LUA_LIBRARY})
+
+find_path (LUA_INCLUDE_DIR lua.h)
+
+include_directories (${LUA_INCLUDE_DIR})
+
+# Copy dll file(s) to target directory
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+		"${LUA_DIR}/bin"
+		${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
 
 target_link_libraries (${PROJECT_NAME} ${LIBS})
 

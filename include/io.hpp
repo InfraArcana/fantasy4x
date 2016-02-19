@@ -57,15 +57,6 @@
 #endif // NDEBUG
 
 //-----------------------------------------------------------------------------
-// Font type
-//-----------------------------------------------------------------------------
-enum class Font_Size
-{
-    small,
-    big
-};
-
-//-----------------------------------------------------------------------------
 // Input data structures
 //-----------------------------------------------------------------------------
 enum class Mouse_Btn
@@ -99,14 +90,16 @@ void init();
 
 void cleanup();
 
-void update_scr();
+P scr_px_dim();
 
-void clear_scr();
-
-P scr_px_size();
+P scr_px_mid();
 
 // TODO: This should probably return a rectangle
 P viewport();
+
+void update_scr();
+
+void clear_scr();
 
 void draw_ch(const char ch,
              const P& p,
