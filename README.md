@@ -1,4 +1,4 @@
-Fantasy 4x
+PostApoc-Strategy
 ============
 # Building from a fresh clone
 1. Create a folder called "build" in the root of the project directory
