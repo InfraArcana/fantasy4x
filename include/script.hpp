@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "utils.hpp"
+
 namespace script
 {
 
@@ -13,9 +15,9 @@ void cleanup();
 // NOTE: "script" must be the path to a lua file, relative to the script directory
 void load(const std::string script);
 
-int get_int(const std::string name);
-
-std::string get_str(const std::string name);
+int         get_int (const std::string& name);
+std::string get_str (const std::string& name);
+P           get_xy  (const std::string& name);
 
 } // script
 

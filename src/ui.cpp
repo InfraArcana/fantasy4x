@@ -1,6 +1,36 @@
 #include "ui.hpp"
 
 #include "state.hpp"
+#include "script.hpp"
+
+namespace ui
+{
+
+P button_sizes[size_t(Button_Type::END)];
+
+void init()
+{
+    TRACE_FUNC_BEGIN;
+
+    // Init button sizes from script
+    script::load("render.lua");
+
+    button_sizes[size_t(Button_Type::small)]    = script::get_xy("button_size_s");
+    button_sizes[size_t(Button_Type::medium)]   = script::get_xy("button_size_m");
+    button_sizes[size_t(Button_Type::large)]    = script::get_xy("button_size_l");
+
+
+    TRACE_FUNC_END;
+}
+
+void cleanup()
+{
+    TRACE_FUNC_BEGIN;
+
+    TRACE_FUNC_END;
+}
+
+} // ui
 
 //-----------------------------------------------------------------------------
 // UI element
@@ -15,8 +45,8 @@ Ui_Element::Ui_Element(const P& p, const P& size) :
 // Button
 //-----------------------------------------------------------------------------
 // TODO: Size should probably be set up from script?
-Button::Button(const std::string text) :
-    Ui_Element  (P(), P(120, 24)),
+Button::Button(const std::string text, const Button_Type size) :
+    Ui_Element  (P(), ui::button_sizes[size_t(size)]),
     text_       (text) {}
 
 void Button::render() const

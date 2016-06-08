@@ -29,7 +29,7 @@ void Main_Menu_State::on_pushed()
 {
     std::vector< std::unique_ptr<Button> > buttons;
 
-    buttons.push_back(std::make_unique<Button>("Continue"));
+    buttons.push_back(std::make_unique<Button>("Continue", Button_Type::small));
 
     auto popup = std::make_unique<Popup>("Hello", "This is a game.", buttons);
 

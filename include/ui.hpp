@@ -9,6 +9,23 @@
 #include "cmn_data.hpp"
 #include "utils.hpp"
 
+enum class Button_Type
+{
+    small,
+    medium,
+    large,
+    END
+};
+
+namespace ui
+{
+
+void init();
+
+void cleanup();
+
+} // ui
+
 class Ui_Element
 {
 public:
@@ -46,7 +63,7 @@ protected:
 class Button : public Ui_Element
 {
 public:
-    Button(const std::string text);
+    Button(const std::string text, const Button_Type size);
 
     void render() const override final;
 

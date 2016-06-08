@@ -22,6 +22,7 @@ int main(int argc, char* argv[])
 
     script::init();
     io::init();
+    ui::init();
     race_data::init();
     world::init();
     states::init();
@@ -53,6 +54,7 @@ int main(int argc, char* argv[])
     states::cleanup();
     world::cleanup();
     race_data::cleanup();
+    ui::init();
     io::cleanup();
     script::cleanup();
 

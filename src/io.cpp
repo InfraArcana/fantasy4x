@@ -77,7 +77,7 @@ void init()
     //-----------------------------------------------------------------------------
     // Set up scripted parameters
     //-----------------------------------------------------------------------------
-    script::load("ui.lua");
+    script::load("render.lua");
 
     cell_px_dim_.x              = script::get_int("cell_width");
     cell_px_dim_.y              = script::get_int("cell_height");
